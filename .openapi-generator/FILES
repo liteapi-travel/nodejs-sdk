@@ -1,0 +1,14 @@
+.gitignore
+.openapi-generator-ignore
+api.ts
+api/apis.ts
+api/bookApi.ts
+api/bookingManagementApi.ts
+api/guestAndLoyaltyApi.ts
+api/searchApi.ts
+api/staticDataApi.ts
+git_push.sh
+model/models.ts
+model/ratesBookPostRequest.ts
+model/ratesBookPostRequestGuestInfo.ts
+model/ratesBookPostRequestPayment.ts
