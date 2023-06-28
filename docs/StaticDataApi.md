@@ -24,7 +24,7 @@ The API returns a list of city names from a specific country. The country codes 
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -75,7 +75,7 @@ The API returns the list of countries available along with its ISO-2 code.
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -122,7 +122,7 @@ The API returns all available currency codes along with its name and the list of
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -169,7 +169,7 @@ The hotel details API returns all the static contents details of a hotel or prop
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -220,7 +220,7 @@ The API returns a list of hotels available based on different search criterion. 
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -285,7 +285,7 @@ The API returns the IATA  (International Air Transport Association) codes  for a
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];

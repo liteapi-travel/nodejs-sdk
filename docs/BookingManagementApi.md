@@ -21,7 +21,7 @@ The API returns the status and the details for the a specific booking Id.
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -72,7 +72,7 @@ Booking cancel
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -123,7 +123,7 @@ The API returns the list of booking Id&#39;s for a given guest Id.
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];

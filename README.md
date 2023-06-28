@@ -1,6 +1,6 @@
-# lite-api-travel
+# liteapi-travel
 
-LiteApi - JavaScript client for lite-api-travel
+LiteApi - JavaScript client for liteapi-travel
 The **Lite API** can be used to to do the following
 
 Get room rates & availability for a set of hotels
@@ -24,7 +24,7 @@ To publish the library as a [npm](https://www.npmjs.com/), please follow the pro
 Then install it via:
 
 ```shell
-npm install lite-api-travel --save
+npm install liteapi-travel --save
 ```
 
 Finally, you need to build the module:
@@ -47,7 +47,7 @@ Next, [link](https://docs.npmjs.com/cli/link) it globally in npm with the follow
 npm link
 ```
 
-To use the link you just defined in your project, switch to the directory you want to use your lite-api-travel from, and run:
+To use the link you just defined in your project, switch to the directory you want to use your liteapi-travel from, and run:
 
 ```shell
 npm link /path/to/<JAVASCRIPT_CLIENT_DIR>
@@ -103,7 +103,7 @@ module: {
 Please follow the [installation](#installation) instruction and execute the following JS code:
 
 ```javascript
-var LiteApi = require('lite-api-travel');
+var LiteApi = require('liteapi-travel');
 
 var defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth

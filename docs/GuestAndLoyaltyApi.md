@@ -19,7 +19,7 @@ The guests API returns the unique guest ID of a user based on the users email ID
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];

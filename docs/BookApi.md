@@ -20,7 +20,7 @@ This API confirms a booking when the prebook Id and the rate Id from the pre boo
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -73,7 +73,7 @@ This API is used to confirm if the room and rates for the search criterion. The 
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];

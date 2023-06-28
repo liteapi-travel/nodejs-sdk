@@ -20,7 +20,7 @@ hotel minimum rates availability
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
@@ -87,7 +87,7 @@ The Full Rates  API is to search and return all available rooms along with its r
 ### Example
 
 ```javascript
-import LiteApi from 'lite-api-travel';
+var LiteApi = require('liteapi-travel');
 let defaultClient = LiteApi.ApiClient.instance;
 // Configure API key authorization: apikeyAuth
 let apikeyAuth = defaultClient.authentications['apikeyAuth'];
