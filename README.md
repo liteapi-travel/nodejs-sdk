@@ -58,46 +58,19 @@ available in the [liteAPI Dashboard](https://dashboard.liteapi.travel/apikeys/).
 value:
 
 ```js
-const liteApi = require('liteapi-travel');
-
-const defaultClient = liteApi.ApiClient.instance;
-
-const apikeyAuth = defaultClient.authentications['apikeyAuth'];
-apikeyAuth.apiKey = "YOUR API KEY"
+const liteApi = require('liteapi-travel')(YOUR_API_KEY);
 ```
 
 # Static data
 
 ## List of cities
 
-The API returns a list of city names from a specific country. The country codes needs be is in ISO-2 format. To get the country codes in ISO-2 for all countries please use the GET Country list endpoint
+The API returns a list of city names from a specific country. The country codes must be in ISO-2 format. To get the country codes in ISO-2 for all countries please use the GET Country list endpoint
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchCitiesByCountryCode = (countryCode: string) => {
-    const apiInstance = new liteApi.StaticDataApi();
-    return new Promise((resolve, reject) => {
-      apiInstance.dataCitiesGet(countryCode, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getDataCities() {
-    try {
-      let countryCode = "US";
-      const data = await this.fetchCitiesByCountryCode(countryCode);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const countryCode = "IT";
+    const result = await liteApi.getCitiesByCountryCode(countryCode);
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
@@ -120,31 +93,9 @@ Field | Type | Description
 
 The API returns the list of countries available along with its ISO-2 code.
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-  fetchCountries = () => {
-    const apiInstance = new liteApi.StaticDataApi();
-    return new Promise((resolve, reject) => {
-      apiInstance.dataCountriesGet((error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getDataCountries() {
-    try {
-      const data = await this.fetchCountries();
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+      const result = await liteApi.getCountries();
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
@@ -166,31 +117,9 @@ Field | Type | Description
 The API returns all available currency codes along with its name and the list of supported countries that the currency applies to.
 
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-  fetchCurrencies = () => {
-    const apiInstance = new liteApi.StaticDataApi();
-    return new Promise((resolve, reject) => {
-      apiInstance.dataCurrenciesGet((error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getDataCurrencies() {
-    try {
-      const data = await this.fetchCurrencies();
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const result = await liteApi.getCurrencies();
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
@@ -212,41 +141,26 @@ An array of currency objects containing the following properties:
 
 The API returns a list of hotels available based on different search criterion. The minimum required information is the county code in ISO-2 format.
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-  fetchHotels = (countryCode: string,cityName: string,opts:any) => {
-    const apiInstance = new liteApi.StaticDataApi();
-    return new Promise((resolve, reject) => {
-      apiInstance.dataHotelsGet(countryCode, cityName, opts, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
+    const countryCode = "IT";
+    const cityName = "Rome";
+    //Optional values
+    const offset = 1000;
+    const limit = 1000;
+    const longitude = "-115.16988";
+    const latitude = "36.12510";
+    const distance = 1000;
 
-
-  public async getDataHotels() {
-    let countryCode = "SG"; 
-    let cityName = "Singapore"; 
-    let opts = {
-        'offset': 0,
-        'limit': 1000, 
-        'longitude': -115.16988, 
-        'latitude': 36.12510, 
-        'distance': 1000
-    };
-    try {
-      const data = await this.fetchHotels(countryCode,cityName,opts);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const result = await liteApi.getHotels(countryCode, cityName);
 ```
+
+To utilize optional values, you can invoke the function as follows:
+
+```js
+    const result = await liteApi.getHotels(countryCode, cityName, offset, limit, longitude, latitude, distance)
+```
+
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
@@ -255,8 +169,8 @@ Name | Type | Description  | Notes
  **cityName** | **string**| name of the city | [required]
  **offset** | **number**| specifies the number of rows to skip before starting to return rows | [optional] 
  **limit** | **number**| limit number of results (max 1000) | [optional] 
- **longitude** | **number** | longitude geo coordinates | [optional] 
- **latitude** | **number** | latitude geo coordinates | [optional] 
+ **longitude** | **string** | longitude geo coordinates | [optional] 
+ **latitude** | **string** | latitude geo coordinates | [optional] 
  **distance** | **number** | distance in meters (min 1000m) | [optional] 
 
 
@@ -286,32 +200,10 @@ An array of hotel objects containing the following properties:
 The hotel details API returns all the static contents details of a hotel or property if the hotel ID is provided. The static content include name, description, address, amenities, cancellation policies, images and more.
 
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-  fetchHotelDetails = (hotelId: string) => {
-    const apiInstance = new liteApi.StaticDataApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.dataHotelGet(hotelId, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getDataHotelDetails() {
-    let hotelId = "lp19c06";
-    try {
-      const data = await this.fetchHotelDetails(hotelId);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const hotelID = "lp24373";
+    const result = await liteApi.getHotelDetails(hotelID);
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 Name | Type | Description  | Notes
@@ -353,31 +245,9 @@ Name | Type | Description  | Notes
 The API returns the IATA (International Air Transport Association) codes for all available airports along with the name of the airport, geographical coordinates and country code in ISO-2 format.
 
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchIataCode  = () => {
-    const apiInstance = new liteApi.StaticDataApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.dataIataCodesGet((error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getDataIataCode() {
-    try {
-      const data = await this.fetchIataCode();
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const result = await liteApi.getIataCodes();
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
@@ -418,53 +288,38 @@ If the search is coming from a known guest ID, the guest level is also returned 
 
 If it is a new user, the guest ID will be generated at the time of the first confirmed booking.
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchHotelMinimumRates = (hotelIds: string,checkin: string,checkout: string,currency: string,guestNationality: string,adults: number, opts: any) => {
-    const apiInstance = new liteApi.SearchApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.hotelsGet(hotelIds, checkin, checkout, currency, guestNationality, adults, opts, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
+    const checkin = "2023-07-15";
+    const checkout = "2023-07-16";
+    const currency = "USD";
+    const guestNationality = "US";
+    const hotelIdsList = ["lp3803c", "lp1f982", "lp19b70", "lp19e75"];
+    const adults = 2;
+    //Optional values
+    const childrenAges = [2,3];
+    const travelerID = "traveler1";
 
-
-  public async getHotelMinimumRates() {
-    let hotelIds = "lp3803c,lp1f982,lp19b70,lp19e75"; 
-    let checkin = "2023-11-15"; 
-    let checkout = "2023-11-16"; 
-    let currency = "USD"; 
-    let guestNationality = "US"; 
-    let adults = 1; 
-    let opts = {
-        'children': "12,9",
-        'guestId': "testtraveler1"
-    };
-    try {
-      const data = await this.fetchHotelMinimumRates(hotelIds,checkin,checkout,currency,guestNationality,adults,opts);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const result = await liteApi.getMinimumRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults);
 ```
+
+To utilize optional values, you can invoke the function as follows:
+```js
+    const result = await liteApi.getMinimumRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults,childrenAges,travelerID);
+```
+
+
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **hotelIds** | **string**| List of hotelIds | [required]
+ **hotelIds** | **array of strings**| List of hotelIds | [required]
  **checkin** | **string**| Check in data in YYYY-MM-DD format | [required]
  **checkout** | **string**| Check out data in YYYY-MM-DD format | [required]
  **currency** | **string**| Currency code - example (USD) | [required]
  **guestNationality** | **string**| Guest nationality ISO-2 code - example (SG) | [required]
  **adults** | **number**| Number of adult guests staying | [required]
- **children** | **string**| Number of children staying if any | [optional] 
+ **children** | **array of numbers**| Number of children staying if any | [optional] 
  **guestId** | **string**| Unique traveler ID if available | [optional] 
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
@@ -496,53 +351,36 @@ If the search is coming from a known guest ID, the guest level is also returned 
 If it is a new user, the guest ID will be generated at the time of the first confirmed booking.
 
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchHotelFullRates = (hotelIds: string,checkin: string,checkout: string,currency: string,guestNationality: string,adults: number, opts: any) => {
-    const apiInstance = new liteApi.SearchApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.hotelsRatesGet(hotelIds, checkin, checkout, guestNationality, currency, adults, opts, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
+    const checkin = "2023-07-15";
+    const checkout = "2023-07-16";
+    const currency = "USD";
+    const guestNationality = "US";
+    const hotelIdsList = ["lp3803c", "lp1f982", "lp19b70", "lp19e75"];
+    const adults = 2;
+    //Optional values
+    const childrenAges = [2,3];
+    const travelerID = "traveler1";
 
+    const result = await liteApi.getFullRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults);
+```
 
-  public async getHotelFullRates() {
-    let hotelIds = "lp3803c,lp1f982,lp19b70,lp19e75"; 
-    let checkin = "2023-11-15"; 
-    let checkout = "2023-11-16"; 
-    let currency = "USD"; 
-    let guestNationality = "US"; 
-    let adults = 1; 
-    let opts = {
-        'children': "12,9",
-        'guestId': "testtraveler1"
-    };
-    try {
-      const data = await this.fetchHotelFullRates(hotelIds,checkin,checkout,currency,guestNationality,adults,opts);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+To utilize optional values, you can invoke the function as follows:
+```js
+    const result = await liteApi.getFullRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults,childrenAges,travelerID);
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **hotelIds** | **string**| List of hotelIds | [required]
+ **hotelIds** | **array of strings**| List of hotelIds | [required]
  **checkin** | **string**| Check in data in YYYY-MM-DD format | [required]
  **checkout** | **string**| Check out data in YYYY-MM-DD format | [required]
  **currency** | **string**| Currency code - example (USD) | [required]
  **guestNationality** | **string**| Guest nationality ISO-2 code - example (SG) | [required]
  **adults** | **number**| Number of adult guests staying | [required]
- **children** | **string**| Number of children staying if any | [optional] 
+ **children** | **array of numbers**| Number of children staying if any | [optional] 
  **guestId** | **string**| Unique traveler ID if available | [optional] 
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
@@ -551,25 +389,25 @@ An array of hotel full rates with the following properties:
 
 | Name         | Type   | Description                                      |
 | ------------ | ------ | ------------------------------------------------ |
-| **roomTypeId** | string | The ID of the room type.                                                                                |
-| **supplier**   | string | The name of the supplier.                                                                               |
-| **supplierId** | number | The ID of the supplier.                                                                                 |
-| **rates**      | Array  | An array of rate objects containing the pricing and details for each rate within the room type.        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **rateId**        | string | The ID of the rate.                                                                                   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **name**          | string | The name of the rate.                                                                                 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **maxOccupancy** | number | The maximum occupancy of the room.                                                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **boardType**     | string | The type of board included (e.g., Bed Only).                                                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **boardName**     | string | The name of the board (e.g., Bed Only).                                                                 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **priceType**     | string | The type of pricing (e.g., commission).                                                                 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **commission**    | Array  | An array of commission objects containing the commission amount and currency.                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **retailRate**    | Object | An object containing the retail rate information, including total price, MSP (Marked Selling Price), and taxes and fees. |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **total**         | Array  | An array of total price objects containing the amount and currency.                                    |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **msp**           | Array  | An array of MSP (Marked Selling Price) objects containing the amount and currency.                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **taxesAndFees**  | Array  | An array of taxes and fees objects containing information about included or additional charges.         |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **cancellationPolicies** | Object | An object containing cancellation policy information.                                                   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **cancelPolicyInfos** | Array  | An array of cancellation policy info objects containing information about cancellation time, amount, currency, and type. |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **hotelRemarks**      | Array  | An array of hotel remarks.                                                                              |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **refundableTag**      | string | The tag indicating if the rate is refundable or non-refundable.                                          |
+| **roomTypeId** | **string** | The ID of the room type.                                                                                |
+| **supplier**   | **string** | The name of the supplier.                                                                               |
+| **supplierId** | **number** | The ID of the supplier.                                                                                 |
+| **rates**      | **Array**  | An array of rate objects containing the pricing and details for each rate within the room type.        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **rateId**        | **string** | The ID of the rate.                                                                                   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **name**          | **string** | The name of the rate.                                                                                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **maxOccupancy** | **number** | The maximum occupancy of the room.                                                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **boardType**     | **string** | The type of board included (e.g., Bed Only).                                                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **boardName**     | **string** | The name of the board (e.g., Bed Only).                                                                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **priceType**     | **string** | The type of pricing (e.g., commission).                                                                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **commission**    | **Array**  | An array of commission objects containing the commission amount and currency.                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **retailRate**    | **Object** | An object containing the retail rate information, including total price, MSP (Marked Selling Price), and taxes and fees. |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **total**         | **Array**  | An array of total price objects containing the amount and currency.                                    |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **msp**           | **Array**  | An array of MSP (Marked Selling Price) objects containing the amount and currency.                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **taxesAndFees**  | **Array**  | An array of taxes and fees objects containing information about included or additional charges.         |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **cancellationPolicies** | **Object** | An object containing cancellation policy information.                                                   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **cancelPolicyInfos** | **Array**  | An array of cancellation policy info objects containing information about cancellation time, amount, currency, and type. |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **hotelRemarks**      | **Array**  | An array of hotel remarks.                                                                              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **refundableTag**      | **string** | The tag indicating if the rate is refundable or non-refundable.                                          |
 
 
 <br>
@@ -585,41 +423,16 @@ In response, the API generates a prebook Id, a new rate Id and contains informat
 
 
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchHotelRatePrebook = (opts: any) => {
-    const apiInstance = new liteApi.BookApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.ratesPrebookPost(opts, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getHotelRatePrebook() {
-    let opts = {
-        'body': {"rateId":"2_3P6L4TRYIFKLFM3DRKUQ4SBFCSO3QJBU27UQ76RU6HTAVUULOUZN3HLFLDS6HRUUQXXZNPELVXHLEXZF3J26PGYXGZEMZOPATZGAUBZLMB7BR6OL7QW4FIAIWTOCOLVHBIRGQFE7UJLTQP5RB6AXVPADIRT34YR56BBBSLSAWK2BMTRYBFRZCYG6HQKMULTSO6JIWWTEGVSBOHNFO7KTFXFMGCULXME2B4PZDCFWK62PT3EL4XUVOEB37V2EA7CWJKOZZU4OYDFB36YWUCID6LWVCCRMVU4PYZH2WBTJ6SLVVEGVZHTVGCVXA5GXEOCUE4ARMWXCIGRPASA5WBFI2T557GWUUZ6YMBZZMPUPCWI7DVO2OG6KY36WWASVBLEJRYFHJRRGQKDV5HY6INAD3YARYKVNFMITJ6BX5LVBVXNF33OZF34ZQDE5S74ND73FMHCYSSTZFOBCOBKYDHQ5BWGRYS7GALROITVAFG2OIFSXLUSKRT3MEURPJL7S3MHWEJMAYJFGGPMRZBEQZXAXDJI"}
-    };
-    try {
-      const data = await this.fetchHotelRatePrebook(opts);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const rateId = "NRYDCZRZHAZHYMRQGIZS2MBXFUYTK7BSGAZDGLJQG4WTCNT4GJ6HYVKTPRDVSWSEJVMVUV2HIUZUOS2OKJKEOWKZKRCU2QSXJVETGRCTJZKEMR2ZGNMFSTKKIRDUSWKEIVGVUUKHGRMVISZXIJJUOQK2IRDU2QSYI5CTGSCZLJGE6TBVJNLEON2DKZFU4NSGJNKTERKQKFNEKQ2NINCFAUK2IRCU6QSUKBJEWVCFKZJVST2KGZCEGTSSLFEEKWKEINHFUV2HKUZVIUKOJJNE6QSELBHVKQSEI5CVURCTJZBFER2BKJKEOTKKJZDUKWSEKNHEEUSHII3EMRKSKNHVAUK2IRAU2USUI5ATGVCDJVJFCR2FLFCECN2CKRIFCWKUJFHEEVCHLFJFMRKULJCEWSSEIU2ESWSTI5AVURCHJRFFCRZUK5KEGTKRPRKVGRD4PR6DCNRWFYYDC7BSGAZDGLJQG4WTCMT4IJHXYMJSHE2DCMD4GI";
+    const result = await liteApi.preBook(rateId)
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [required] 
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **rateId** | **string**| rate id retrieved from rates response| [required]
+**rateId** | **string**| rate id retrieved from getFullRates response| [required]
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
@@ -673,45 +486,37 @@ The payment information is an object that should include the name, credit card n
 The response will confirm the booking along with a booking Id and a hotel confirmation code. It will also include the booking details including the dates, price and the cancellation policies.
 
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
+
+
 ```js
- fetchHotelRateBook = (opts: any) => {
-    const apiInstance = new liteApi.BookApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.ratesBookPost(opts, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
+const prebookId = "8iaO7PXBU";
+const guestInfo = { guestFirstName: 'Kim', guestLastName: 'James', guestEmail: 'test@nlite.ml' };
+const paymentMethod = "CREDIT_CARD";
+const holderName = "Kim James";
+const paymentInfo = { "card_number": "4242424242424242", "exp_month": 11, "exp_year": 23, "cvc": 123,"token":null }
 
+const result = await liteApi.book(prebookId, guestInfo, paymentMethod, holderName, paymentInfo)
 
-  public async getHotelRateBook() {
-    let opts = {
-    'ratesBookPostRequest': {
-        "prebookId":"UwfMkUWH6",
-        "guestInfo":{"guestFirstName":"Kim","guestLastName":"James","guestEmail":"test@nlite.ml"},
-        "payment":{"holderName":"Kim James","number":"4242424242424242","expireDate":"11/29","cvc":"456","method":"CREDIT_CARD"}}
-    };
-
-    try {
-      const data = await this.fetchHotelRateBook(opts);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [required] 
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **rateId** | **string**| rate id retrieved from rates response| [required]
+**prebookId** | **string**| prebook id retrieved from prebook response| [required]
+**guestInfo** | **object**| traveler informations| [required]|
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **guestFirstName** | **string**| traveler first name | [required]|
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **guestLastName** | **string**| traveler last name | [required]|
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **guestEmail** | **string**| traveler email | [required]|
+**paymentMethod** | **string**| methodEnum: "CREDIT_CARD" or "STRIPE_TOKEN" | [required]
+**holderName** | **string**| name of the cardholder	| [required]
+**paymentInfo** | **object**| payment informations | [required]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **card_number** | **string**| the card number associated with the credit card| [required if paymentMethod is CREDIT_CARD] 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **exp_month** | **number**| the expiration month of the credit card | [required if paymentMethod is CREDIT_CARD] 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **exp_year** | **number**| the expiration year of the credit card | [required if paymentMethod is CREDIT_CARD] 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **cvc** | **number**| the card verification code (CVC) associated with the credit card | [required if paymentMethod is CREDIT_CARD] 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **token** | **string**| token provided by Stripe for the payment method. | [required if paymentMethod is STRIPE_TOKEN] 
+
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
@@ -758,32 +563,10 @@ An object containing booking information and room details.
 ------
 The API returns the list of booking Id's for a given guest Id.
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchBookingListByGuestId = (guestId: string) => {
-    const apiInstance = new liteApi.BookingManagementApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.bookingsGet(guestId, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getBookingList() {
-    let guestId = "FrT56hfty";
-    try {
-      const data = await this.fetchBookingListByGuestId(guestId);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const guestId = "FrT56hfty";
+    const result = await liteApi.getBookingListByGuestId(guestId)
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
@@ -809,32 +592,10 @@ An array containing objects with the following properties:
 The API returns the status and the details for the a specific booking Id.
 
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchBookingDetailsByBookingId = (bookingId: string) => {
-    const apiInstance = new liteApi.BookingManagementApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.bookingsBookingIdGet(bookingId, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getBookingDetails() {
-    let bookingId = "uSQ6Zsc5R";
-    try {
-      const data = await this.fetchBookingDetailsByBookingId(bookingId);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const bookingId = "uSQ6Zsc5R";
+    const result = await liteApi.retrievedBooking(bookingId);
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
@@ -884,38 +645,16 @@ An object containing booking information and room details.
 
 This API is used to request a cancellation of an existing confirmed booking. Cancellation policies and conditions will be used to determine the success of the cancellation. For example a booking with non-refundable (NRFN) tag or a booking with a cancellation policy that was requested past the cancellation date will not be able to cancel the confirmed booking.
 
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- cancelationBookingByBookingId = (bookingId: string) => {
-    const apiInstance = new liteApi.BookingManagementApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.bookingsBookingIdPut(bookingId, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async cancelationBooking() {
-    let bookingId = "uSQ6Zsc5R";
-    try {
-      const data = await this.cancelationBookingByBookingId(bookingId);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+const bookingId = "K8Hvb-85O";
+const result = await liteApi.cancelBooking(bookingId);
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **bookingId** | **string** | The unique identifier of the booking you would like to update. |  [required]
+ **bookingId** | **string** | The booking Id of the booking you would like to cancel. |  [required]
 
 
 
@@ -934,43 +673,23 @@ Name | Type | Description  | Notes
 # Guest and loyalty
 
 ## Guests
-The guests API returns the unique guest ID of a user based on the users email ID
+The guests API returns the unique guest IDs
 
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example with TypeScript :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
- fetchGuestIds = (opts: any) => {
-    const apiInstance = new liteApi.GuestAndLoyaltyApi();
-    return new Promise((resolve, reject) => {
-    apiInstance.guestsGet(opts, (error, data) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-  };
-
-
-  public async getGuestIds() {
-    let opts = {
-        'email': "johndoe@nlite.ml"
-        };
-    try {
-      const data = await this.fetchGuestIds(opts);
-      return {data };
-    } catch (error) {
-      console.error(error);
-      return { error };
-    }
-  }
+    const result = await liteApi.getGuestsIds();
 ```
+If you want to retrieve the guest IDs of a specific user based on their email, you can provide the email as an optional parameter:
+```js
+    const email = "johndoe@nlite.ml"; //Optional
+    const result = await liteApi.getGuestsIds(email);
+```
+
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **email** | **string**| Email ID of the guest | [optional] 
+ **email** | **string**| the guest Email | [optional] 
 
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
