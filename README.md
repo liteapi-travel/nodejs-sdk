@@ -41,7 +41,6 @@ The liteAPI can be used to to do the following:
 
 Don't have an account yet?  Sign Up [Here](https://dashboard.liteapi.travel/register/).
 
-
 # Installing
 
 Install the package with:
@@ -62,6 +61,8 @@ const liteApi = require('liteapi-travel')(YOUR_API_KEY);
 ```
 
 # Static data
+
+You can fetch the static data from the API or download it from the table available at [Static Data Table](STATICDATA.md).
 
 ## List of cities
 
