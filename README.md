@@ -23,8 +23,6 @@
     - [Booking list](#booking-list)
     - [Booking retrieve](#booking-retrieve)
     - [Booking cancel](#booking-cancel)
-- [Guest and loyalty](#guest-and-loyalty)
-  - [Guests](#guests)
 - [Example Project](#example-project)
 
 # Introduction
@@ -661,39 +659,6 @@ Name | Type | Description  | Notes
 | **currency**     | **string** | The currency of the booking. |
 
 <br>
-
-# Guest and loyalty
-
-## Guests
-
-The getGuestIds function returns the unique guestID when an email is passed as a parameter. The email that is passed to the book function is used to create a guestID. This guestID can be used to build loyalty programs in the application.
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
-```js
-    const result = await liteApi.getGuestsIds();
-```
-
-If you want to retrieve the guest IDs of a specific user based on their email, you can provide the email as an optional parameter:
-
-```js
-    const email = "johndoe@nlite.ml"; //Optional
-    const result = await liteApi.getGuestsIds(email);
-```
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **email** | **string**| the guest Email | [optional] 
-
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
-
-An array containing objects with the following properties:
-
-| Name       | Type   | Description      |
-| ---------- | ------ | ---------------- |
-| **guestId** | **string** | The guest ID.    |
 
 
 # Example Project

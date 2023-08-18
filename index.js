@@ -2,6 +2,7 @@ class LiteApi {
     constructor(apiKey) {
         this.apiKey = apiKey;
         this.serviceURL = "https://api.liteapi.travel/v2.0";
+        this.bookServiceURL = "https://book.liteapi.travel/v2.0";
     }
     /**
      * Hotel Minimum Rates API is to search and return the minimum room rates that are available for a list of hotel ID's on the specified search dates.
@@ -214,7 +215,7 @@ class LiteApi {
                 rateId: rateId
             })
         };
-        const response = await fetch(this.serviceURL + '/rates/prebook', options)
+        const response = await fetch(this.bookServiceURL + '/rates/prebook', options)
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -314,7 +315,7 @@ class LiteApi {
                 payment: payment
             })
         };
-        const response = await fetch(this.serviceURL + '/rates/book', options)
+        const response = await fetch(this.bookServiceURL + '/rates/book', options)
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -354,7 +355,7 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const response = await fetch(this.serviceURL + '/bookings?guestId=' + guestId, options)
+        const response = await fetch(this.bookServiceURL + '/bookings?guestId=' + guestId, options)
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -392,7 +393,7 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const response = await fetch(this.serviceURL + '/bookings/' + bookingId, options)
+        const response = await fetch(this.bookServiceURL + '/bookings/' + bookingId, options)
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -430,7 +431,7 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const response = await fetch(this.serviceURL + '/bookings/' + bookingId, options)
+        const response = await fetch(this.bookServiceURL + '/bookings/' + bookingId, options)
         const data = await response.json();
         if (!response.ok) {
             return {
