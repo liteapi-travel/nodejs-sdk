@@ -11,6 +11,7 @@
   - [List of available currencies](#list-of-available-currencies)
   - [List of hotels](#list-of-hotels)
   - [Hotel details](#hotel-details)
+  - [Hotel reviews](#hotel-reviews)
   - [IATA code list](#iata-code-list)
 - [Booking flow](#booking-flow)
   - [Search](#search)
@@ -245,6 +246,25 @@ Name | Type | Description  | Notes
 | **zip**                   | **string**               | The postal code of the hotel.                                                                                           |
 | **chainId**               | **string**               | The unique identifier of the hotel chain.                                                                                |
 | **hotelFacilities**       | **Array**                | An array of hotel facilities offered by the hotel.                                                                      |
+
+<br>
+
+## Hotel reviews
+
+The getHotelReviews function returns a list of reviews for a specific hotel identified by hotelId. The number of reviews returned is limited by the limit parameter.
+
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
+
+```js
+    const result = await liteApi.getHotelReviews("lp24373", 200);
+```
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **hotelId** | **string**| Unique ID of a hotel | [required]
+ **limit** | **number**| Number of reviews to retrieve | [required]
 
 <br>
 
