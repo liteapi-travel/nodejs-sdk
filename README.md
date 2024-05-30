@@ -14,7 +14,6 @@
   - [IATA code list](#iata-code-list)
 - [Booking flow](#booking-flow)
   - [Search](#search)
-    - [Minimum Rates availability](#minimum-rates-availability)
     - [Hotel full rates availability](#hotel-full-rates-availability)
   - [Book](#book)
     - [Hotel rate prebook](#hotel-rate-prebook)
@@ -75,7 +74,7 @@ Static data can be directly fetched from the functions below. Alternatively, Lit
 
 ## List of cities
 
-The getCitiesByCountryCode function returns a list of city names from a specific country. The country codes must be in ISO-2 format. To get the country codes in ISO-2 for all countries please use the getCountries function. 
+The getCitiesByCountryCode function returns a list of city names from a specific country. The country codes must be in ISO-2 format. To get the country codes in ISO-2 for all countries please use the getCountries function.
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
@@ -176,16 +175,16 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **countryCode** | **string**| country code ISO-2 code - example (US) | [required]
  **cityName** | **string**| name of the city | [required]
- **offset** | **number**| specifies the number of rows to skip before starting to return rows | [optional] 
- **limit** | **number**| limit number of results (max 1000) | [optional] 
- **longitude** | **string** | longitude geo coordinates | [optional] 
- **latitude** | **string** | latitude geo coordinates | [optional] 
- **distance** | **number** | distance in meters (min 1000m) | [optional] 
+ **offset** | **number**| specifies the number of rows to skip before starting to return rows | [optional]
+ **limit** | **number**| limit number of results (max 1000) | [optional]
+ **longitude** | **string** | longitude geo coordinates | [optional]
+ **latitude** | **string** | latitude geo coordinates | [optional]
+ **distance** | **number** | distance in meters (min 1000m) | [optional]
 
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
-An array of hotel objects containing the following properties:  
+An array of hotel objects containing the following properties:
 
 | Name            | Type   | Description                                                                                               |
 | --------------- | ------ | --------------------------------------------------------------------------------------------------------- |
@@ -278,67 +277,11 @@ An array of IATA objects with the following properties:
 
 # Booking flow
 
-liteAPI offers a comprehensive and simple way to implement Hotel Booking flow. The booking flow consists of 3 sections: Search, Book, and 
-booking management.
+liteAPI offers a comprehensive and simple way to implement Hotel Booking flow. The booking flow consists of 3 sections: Search, Book, and booking management.
 
 <br>
 
 ## Search
-
-### Minimum Rates availability
-------
-The getMinimumRates function is used to retrieve the minimum room rates that are available for a list of hotel ID's on the specified search dates.
-
-For each hotel ID, the minimum room rate that is available is returned.
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
-```js
-    const checkin = "2023-07-15";
-    const checkout = "2023-07-16";
-    const currency = "USD";
-    const guestNationality = "US";
-    const hotelIdsList = ["lp3803c", "lp1f982", "lp19b70", "lp19e75"];
-    const adults = 2;
-    //Optional values
-    const childrenAges = [2,3];
-    const travelerID = "traveler1";
-
-    const result = await liteApi.getMinimumRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults);
-```
-
-To utilize optional values, you can invoke the function as follows:
-```js
-    const result = await liteApi.getMinimumRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults,childrenAges,travelerID);
-```
-
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **hotelIds** | **array of strings**| List of hotelIds | [required]
- **checkin** | **string**| Check in data in YYYY-MM-DD format | [required]
- **checkout** | **string**| Check out data in YYYY-MM-DD format | [required]
- **currency** | **string**| Currency code - example (USD) | [required]
- **guestNationality** | **string**| Guest nationality ISO-2 code - example (SG) | [required]
- **adults** | **number**| Number of adult guests staying | [required]
- **children** | **array of numbers**| Number of children staying if any | [optional] 
- **guestId** | **string**| Unique traveler ID if available | [optional] 
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
-
-An array of hotel minimum rates objects with the following properties:
-
-| Name         | Type   | Description                                      |
-| ------------ | ------ | ------------------------------------------------ |
-| **hotelId**    | **string** | The ID of the hotel.                             |
-| **currency**   | **string** | The currency code for the price.                  |
-| **price**      | **number** | The price of the hotel.                           |
-| **supplierId** | **number** | The ID of the supplier.                           |
-| **supplier**   | **string** | The name of the supplier.                         |
-
-
-<br>
 
 
 ### Hotel full rates availability
@@ -347,23 +290,22 @@ The getFullRates function return the rates of all available rooms along with its
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-    const checkin = "2023-07-15";
-    const checkout = "2023-07-16";
-    const currency = "USD";
-    const guestNationality = "US";
-    const hotelIdsList = ["lp3803c", "lp1f982", "lp19b70", "lp19e75"];
-    const adults = 2;
-    //Optional values
-    const childrenAges = [2,3];
-    const travelerID = "traveler1";
-
-    const result = await liteApi.getFullRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults);
+    const result = await liteApi.getFullRates({
+        checkin: "2023-07-15",
+        checkout: "2023-07-16",
+        currency: "USD",
+        guestNationality: "US",
+        hotelIds: ["lp3803c", "lp1f982", "lp19b70", "lp19e75"],
+        occupancies: [
+            {
+                rooms: 1,
+                adults: 2,
+                children: [2, 3]
+            }
+        ]
+    });
 ```
 
-To utilize optional values, you can invoke the function as follows:
-```js
-    const result = await liteApi.getFullRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults,childrenAges,travelerID);
-```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
@@ -373,9 +315,8 @@ Name | Type | Description  | Notes
  **checkout** | **string**| Check out data in YYYY-MM-DD format | [required]
  **currency** | **string**| Currency code - example (USD) | [required]
  **guestNationality** | **string**| Guest nationality ISO-2 code - example (SG) | [required]
- **adults** | **number**| Number of adult guests staying | [required]
- **children** | **array of numbers**| Number of children staying if any | [optional] 
- **guestId** | **string**| Unique traveler ID if available | [optional] 
+ **occupancies** | **array of objects**| Occupancies | [required]
+ **guestId** | **string**| Unique traveler ID if available | [optional]
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
@@ -411,23 +352,23 @@ An array of hotel full rates with the following properties:
 ### Hotel rate prebook
 ------
 
-The preBook function is used to confirm if the room rates are still available before a booking function can be called. The input to the function is a specific rate Id coming from the getFullRates function.
+The preBook function is used to confirm if the room rates are still available before a booking function can be called. The input to the function is a list of rate Ids coming from the getFullRates function.
 The function returns a prebook Id, a new rate Id and also contains information if the price, cancellation policy or boarding information changed.
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-    const rateId = "NRYDCZRZHAZHYMRQGIZS2MBXFUYTK7BSGAZDGLJQG4WTCNT4GJ6HYVKTPRDVSWSEJVMVUV2HIUZUOS2OKJKEOWKZKRCU2QSXJVETGRCTJZKEMR2ZGNMFSTKKIRDUSWKEIVGVUUKHGRMVISZXIJJUOQK2IRDU2QSYI5CTGSCZLJGE6TBVJNLEON2DKZFU4NSGJNKTERKQKFNEKQ2NINCFAUK2IRCU6QSUKBJEWVCFKZJVST2KGZCEGTSSLFEEKWKEINHFUV2HKUZVIUKOJJNE6QSELBHVKQSEI5CVURCTJZBFER2BKJKEOTKKJZDUKWSEKNHEEUSHII3EMRKSKNHVAUK2IRAU2USUI5ATGVCDJVJFCR2FLFCECN2CKRIFCWKUJFHEEVCHLFJFMRKULJCEWSSEIU2ESWSTI5AVURCHJRFFCRZUK5KEGTKRPRKVGRD4PR6DCNRWFYYDC7BSGAZDGLJQG4WTCMT4IJHXYMJSHE2DCMD4GI";
-    const result = await liteApi.preBook(rateId)
+    const rateIds = ["NRYDCZRZHAZHYMRQGIZS2MBXFUYTK7BSGAZDGLJQG4WTCNT4GJ6HYVKTPRDVSWSEJVMVUV2HIUZUOS2OKJKEOWKZKRCU2QSXJVETGRCTJZKEMR2ZGNMFSTKKIRDUSWKEIVGVUUKHGRMVISZXIJJUOQK2IRDU2QSYI5CTGSCZLJGE6TBVJNLEON2DKZFU4NSGJNKTERKQKFNEKQ2NINCFAUK2IRCU6QSUKBJEWVCFKZJVST2KGZCEGTSSLFEEKWKEINHFUV2HKUZVIUKOJJNE6QSELBHVKQSEI5CVURCTJZBFER2BKJKEOTKKJZDUKWSEKNHEEUSHII3EMRKSKNHVAUK2IRAU2USUI5ATGVCDJVJFCR2FLFCECN2CKRIFCWKUJFHEEVCHLFJFMRKULJCEWSSEIU2ESWSTI5AVURCHJRFFCRZUK5KEGTKRPRKVGRD4PR6DCNRWFYYDC7BSGAZDGLJQG4WTCMT4IJHXYMJSHE2DCMD4GI"];
+    const result = await liteApi.preBook(rateIds)
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**rateId** | **string**| rate id retrieved from getFullRates response| [required]
+**rateIds** | **array** | rate id retrieved from getFullRates response | [required]
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
-An object containing prebook information and room type details.                      
+An object containing prebook information and room type details.
 
 | Name                      | Type   | Description                                                                                            |
 | ------------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
@@ -501,16 +442,16 @@ Name | Type | Description  | Notes
 **paymentMethod** | **string**| methodEnum: "CREDIT_CARD" or "STRIPE_TOKEN" | [required]
 **holderName** | **string**| name of the cardholder	| [required]
 **paymentInfo** | **object**| payment informations | [required]
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **card_number** | **string**| the card number associated with the credit card| [required if paymentMethod is CREDIT_CARD] 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **exp_month** | **number**| the expiration month of the credit card | [required if paymentMethod is CREDIT_CARD] 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **exp_year** | **number**| the expiration year of the credit card | [required if paymentMethod is CREDIT_CARD] 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **cvc** | **number**| the card verification code (CVC) associated with the credit card | [required if paymentMethod is CREDIT_CARD] 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **token** | **string**| token provided by Stripe for the payment method. | [required if paymentMethod is STRIPE_TOKEN] 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **card_number** | **string**| the card number associated with the credit card| [required if paymentMethod is CREDIT_CARD]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **exp_month** | **number**| the expiration month of the credit card | [required if paymentMethod is CREDIT_CARD]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **exp_year** | **number**| the expiration year of the credit card | [required if paymentMethod is CREDIT_CARD]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **cvc** | **number**| the card verification code (CVC) associated with the credit card | [required if paymentMethod is CREDIT_CARD]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **token** | **string**| token provided by Stripe for the payment method. | [required if paymentMethod is STRIPE_TOKEN]
 
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
-An object containing booking information and room details.   
+An object containing booking information and room details.
 
 
 | Name                      | Type    | Description                          |
@@ -579,12 +520,12 @@ An array containing objects with the following properties:
 
 ### Booking retrieve
 ------
-The retrievedBooking function returns the status and the details of a specific booking Id.
+The retrieveBooking function returns the status and the details of a specific booking Id.
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
     const bookingId = "uSQ6Zsc5R";
-    const result = await liteApi.retrievedBooking(bookingId);
+    const result = await liteApi.retrieveBooking(bookingId);
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
@@ -596,7 +537,7 @@ Name | Type | Description  | Notes
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
-An object containing booking information and room details.   
+An object containing booking information and room details.
 
 | Name                  | Type   | Description                      |
 | --------------------- | ------ | -------------------------------- |
