@@ -374,17 +374,19 @@ An array of hotel full rates with the following properties:
 
 The preBook function is used to confirm if the room rates are still available before a booking function can be called. The input to the function is a list of rate Ids coming from the getFullRates function.
 The function returns a prebook Id, a new rate Id and also contains information if the price, cancellation policy or boarding information changed.
+The second parameter is a boolean value that indicates if the payment will use the client-side payment wrapper SDK.
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
     const rateIds = ["NRYDCZRZHAZHYMRQGIZS2MBXFUYTK7BSGAZDGLJQG4WTCNT4GJ6HYVKTPRDVSWSEJVMVUV2HIUZUOS2OKJKEOWKZKRCU2QSXJVETGRCTJZKEMR2ZGNMFSTKKIRDUSWKEIVGVUUKHGRMVISZXIJJUOQK2IRDU2QSYI5CTGSCZLJGE6TBVJNLEON2DKZFU4NSGJNKTERKQKFNEKQ2NINCFAUK2IRCU6QSUKBJEWVCFKZJVST2KGZCEGTSSLFEEKWKEINHFUV2HKUZVIUKOJJNE6QSELBHVKQSEI5CVURCTJZBFER2BKJKEOTKKJZDUKWSEKNHEEUSHII3EMRKSKNHVAUK2IRAU2USUI5ATGVCDJVJFCR2FLFCECN2CKRIFCWKUJFHEEVCHLFJFMRKULJCEWSSEIU2ESWSTI5AVURCHJRFFCRZUK5KEGTKRPRKVGRD4PR6DCNRWFYYDC7BSGAZDGLJQG4WTCMT4IJHXYMJSHE2DCMD4GI"];
-    const result = await liteApi.preBook(rateIds)
+    const result = await liteApi.preBook(rateIds, true)
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **rateIds** | **array** | rate id retrieved from getFullRates response | [required]
+**payment** | **boolean** | whether the payment wrapper SDK is going to be used for this transaction | [required]
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
