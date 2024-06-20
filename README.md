@@ -56,9 +56,9 @@ Don't have an account yet?  Sign Up [Here](https://dashboard.liteapi.travel/regi
 Install the package using the following npm or yarn commands:
 
 ```sh
-npm install liteapi-travel
+npm install liteapi-node-sdk
 # or
-yarn add liteapi-travel
+yarn add liteapi-node-sdk
 ```
 
 # Usage
@@ -66,7 +66,7 @@ yarn add liteapi-travel
 After you have installed the LiteAPI package, you need to configure it with your API key. The API key is available in the [liteAPI Dashboard](https://dashboard.liteapi.travel/apikeys/). Here's the step to add the API key to the package.
 
 ```js
-const liteApi = require('liteapi-travel')(YOUR_API_KEY);
+const liteApi = require('liteapi-node-sdk')(YOUR_API_KEY);
 ```
 
 # Static data
