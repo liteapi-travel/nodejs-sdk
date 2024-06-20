@@ -44,10 +44,10 @@ class LiteApi {
         In response, the API generates a prebook Id, a new rate Id and contains information if price, cancellation policy or boarding information has changed.
      *
      * @param {array} rateId - Rate ids retrieved from rates response.
-     * @param {boolean} payment - Whether the payment wrapper SDK is going to be used for this transaction.
+     * @param {boolean} usePaymentSdk - Whether the payment wrapper SDK is going to be used for this transaction.
      * @returns {object} - The result of the operation.
      */
-    async preBook(rateIds, payment) {
+    async preBook(rateIds, usePaymentSdk) {
         let errors = [];
         if (!Array.isArray(rateIds) || rateIds.length == 0) {
             errors.push("The rate IDs are required");
@@ -67,7 +67,7 @@ class LiteApi {
             },
             body: JSON.stringify({
                 rateIds: rateIds,
-                payment: payment
+                usePaymentSdk: usePaymentSdk
             })
         };
         const response = await fetch(this.bookServiceURL + '/rates/prebook', options);
