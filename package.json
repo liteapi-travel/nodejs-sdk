@@ -1,7 +1,7 @@
 {
-  "name": "liteapi-travel",
-  "version": "2.0.5-updates",
-  "description": "The **liteAPI** can be used to to do the following  Get room rates & availability for a set of hotels Select a specific hotel with room availability and make a booking Manage the bookings - retrieve and cancel existing bookings Get static content for hotels, search hotels by destination",
+  "name": "liteapi-nodejs",
+  "version": "3.0.0",
+  "description": "Start building travel apps with liteAPI. Instantly access millions of hotels to build new or existing apps and platforms.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

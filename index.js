@@ -1,99 +1,8 @@
 class LiteApi {
     constructor(apiKey) {
         this.apiKey = apiKey;
-        this.serviceURL = "https://api.liteapi.travel/v2.0";
-        this.bookServiceURL = "https://book.liteapi.travel/v2.0";
-    }
-    /**
-     * Hotel Minimum Rates API is to search and return the minimum room rates that are available for a list of hotel ID's on the specified search dates.
-        For each hotel ID, the minimum room rate that is available is returned.
-        The API also has a built in loyalty rewards system. The system rewards return users who have made prior bookings.
-        If the search is coming from a known guest ID, the guest level is also returned along with the pricing that's appropriate for the guest level.
-        If it is a new user, the guest ID will be generated at the time of the first confirmed booking.
-     *
-     * @param {string} checkin - Checkin date in YYYY-MM-DD format.
-     * @param {string} checkout - Checkout date in YYYY-MM-DD format.
-     * @param {string} currency - Ex: USD - EUR - MAD.
-     * @param {string} guestNationality - Guest nationality should be an ISO2 country code : US - FR.
-     * @param {array} hotelIdsList - An array of hotel IDs.
-     * @param {number} adults - Number of adult guests staying.
-     * @param {array} children - List of the ages of children staying Ex : [2,4] = 2 years old and 4 years old.
-     * @param {string} travelerID - Unique traveler ID if available, this is optional.
-     * @returns {object} - The result of the operation.
-     */
-    async getMinimumRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults, children = "", travelerID = "") {
-        let errors = [];
-        let queryparams = {};
-        if (checkin == "" || checkin === undefined) {
-            errors.push("Checkin date is required");
-        } else {
-            queryparams["checkin"] = checkin;
-        }
-        if (checkout == "" || checkout === undefined) {
-            errors.push("Checkout date is required");
-        } else {
-            queryparams["checkout"] = checkout;
-        }
-        if (adults == "" || adults === undefined) {
-            errors.push("Number of adults is required");
-        } else {
-            if (isNaN(parseInt(adults)) || !isFinite(adults)) {
-                errors.push("Adults must be a number");
-            } else {
-                queryparams["adults"] = adults;
-            }
-        }
-        if (currency == "") {
-            currency = "USD";
-        }
-        queryparams["currency"] = currency;
-
-        if (guestNationality == "") {
-            guestNationality = "US";
-        }
-
-        queryparams["guestNationality"] = guestNationality;
-
-        if (!Array.isArray(hotelIdsList)) {
-            errors.push("The hotel ids list must be an array");
-        } else {
-            queryparams["hotelIds"] = hotelIdsList.join("%2C");
-        }
-
-        if (children != "") {
-            if (!Array.isArray(children)) {
-                errors.push("Children must be an array of ages, ex: [2,8]");
-            } else {
-                queryparams["children"] = children.join("%2C");
-            }
-        }
-        if (travelerID != "") {
-            queryparams["guestId"] = travelerID;
-
-        }
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        } else {
-            const options = { method: 'GET', headers: { accept: 'application/json', 'X-API-Key': this.apiKey } }
-            const query = decodeURIComponent(new URLSearchParams(queryparams).toString());
-            const URL = this.serviceURL + `/hotels?${query}`;
-            const response = await fetch(URL, options);
-            const data = await response.json();
-            if (!response.ok) {
-                return {
-                    "status": "failed",
-                    "error": data.error
-                }
-            }
-
-            return {
-                "status": "success",
-                "data": data.data
-            }
-        }
+        this.serviceURL = "https://api.liteapi.travel/v3.0";
+        this.bookServiceURL = "https://book.liteapi.travel/v3.0";
     }
     /**
      * The Full Rates API is to search and return all available rooms along with its rates, cancellation policies for a list of hotel ID's based on the search dates.
@@ -102,101 +11,46 @@ class LiteApi {
     If the search is coming from a known guest ID, the guest level is also returned along with the pricing that's appropriate for the guest level.
     If it is a new user, the guest ID will be generated at the time of the first confirmed booking.
      *
-     * @param {string} checkin - Checkin date in YYYY-MM-DD format.
-     * @param {string} checkout - Checkout date in YYYY-MM-DD format.
-     * @param {string} currency - Ex: USD - EUR - MAD.
-     * @param {string} guestNationality - Guest nationality should be an ISO2 country code : US - FR.
-     * @param {array} hotelIdsList - An array of hotel IDs.
-     * @param {number} adults - Number of adult guests staying.
-     * @param {array} children - List of the ages of children staying Ex : [2,4] = 2 years old and 4 years old.
-     * @param {string} travelerID - Unique traveler ID if available, this is optional.
+     * @param {object} data - The search criteria object.
      * @returns {object} - The result of the operation.
      */
-    async getFullRates(checkin, checkout, currency, guestNationality, hotelIdsList, adults, children = "", travelerID = "") {
-        let errors = [];
-        let queryparams = {};
-        if (checkin == "" || checkin === undefined) {
-            errors.push("Checkin date is required");
-        } else {
-            queryparams["checkin"] = checkin;
-        }
-        if (checkout == "" || checkout === undefined) {
-            errors.push("Checkout date is required");
-        } else {
-            queryparams["checkout"] = checkout;
-        }
-        if (adults == "" || adults === undefined) {
-            errors.push("Number of adults is required");
-        } else {
-            if (isNaN(parseInt(adults)) || !isFinite(adults)) {
-                errors.push("Adults must be a number");
-            } else {
-                queryparams["adults"] = adults;
-            }
-        }
-        if (currency == "") {
-            currency = "USD";
-        }
-        queryparams["currency"] = currency;
+    async getFullRates(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+        const response = await fetch(this.serviceURL + '/hotels/rates', options);
+        const data = await response.json();
 
-        if (guestNationality == "") {
-            guestNationality = "US";
-        }
-
-        queryparams["guestNationality"] = guestNationality;
-
-        if (!Array.isArray(hotelIdsList)) {
-            errors.push("The hotel ids list must be an array");
-        } else {
-            queryparams["hotelIds"] = hotelIdsList.join("%2C");
-        }
-
-        if (children != "") {
-            if (!Array.isArray(children)) {
-                errors.push("Children must be an array of ages, ex: [2,8]");
-            } else {
-                queryparams["children"] = children.join("%2C");
-            }
-        }
-        if (travelerID != "") {
-            queryparams["guestId"] = travelerID;
-
-        }
-        if (errors.length > 0) {
+        if (!response.ok) {
             return {
                 "status": "failed",
-                "errors": errors
+                "error": data.error
             }
-        } else {
-            const options = { method: 'GET', headers: { accept: 'application/json', 'X-API-Key': this.apiKey } }
-            const query = decodeURIComponent(new URLSearchParams(queryparams).toString());
-            const URL = this.serviceURL + `/hotels/rates?${query}`;
-            const response = await fetch(URL, options);
-            const data = await response.json();
-            if (!response.ok) {
-                return {
-                    "status": "failed",
-                    "error": data.error
-                }
-            }
+        }
 
-            return {
-                "status": "success",
-                "data": data.data
-            }
+        return {
+            "status": "success",
+            "data": data.data
         }
     }
     /**
-     * This API is used to confirm if the room and rates for the search criterion. The input to the endpoint is a specific rate Id coming from the GET hotel full rates availability API.
+     * This API is used to confirm if the room and rates for the search criterion. The input to the endpoint is an array of rate Ids coming from the GET hotel full rates availability API.
         In response, the API generates a prebook Id, a new rate Id and contains information if price, cancellation policy or boarding information has changed.
      *
-     * @param {string} rateId - Rate id retrieved from rates response.
+     * @param {array} rateId - Rate ids retrieved from rates response.
+     * @param {boolean} usePaymentSdk - Whether the payment wrapper SDK is going to be used for this transaction.
      * @returns {object} - The result of the operation.
      */
-    async preBook(rateId) {
+    async preBook(rateIds, usePaymentSdk) {
         let errors = [];
-        if (rateId == "" || rateId === undefined) {
-            errors.push("The rate ID is required");
+        if (!Array.isArray(rateIds) || rateIds.length == 0) {
+            errors.push("The rate IDs are required");
         }
         if (errors.length > 0) {
             return {
@@ -212,10 +66,11 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
             body: JSON.stringify({
-                rateId: rateId
+                rateIds: rateIds,
+                usePaymentSdk: usePaymentSdk
             })
         };
-        const response = await fetch(this.bookServiceURL + '/rates/prebook', options)
+        const response = await fetch(this.bookServiceURL + '/rates/prebook', options);
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -373,7 +228,7 @@ class LiteApi {
      * @param {string} bookingId - The Booking Id that needs to be retrieved.
      * @returns {object} - The result of the operation.
      */
-    async retrievedBooking(bookingId) {
+    async retrieveBooking(bookingId) {
         let errors = [];
         if (bookingId == "" || bookingId === undefined) {
             errors.push("The booking ID is required");
@@ -611,6 +466,47 @@ class LiteApi {
         };
         const response = await fetch(this.serviceURL + '/data/hotel?hotelId=' + hotelId, options)
         const data = await response.json();
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": data.error
+            }
+        }
+        return {
+            "status": "success",
+            "data": data.data
+        }
+    }
+    /**
+    * Retrieves a list of reviews for a specific hotel identified by hotelId
+    * @param {string} hotelId - Unique ID of a hotel
+    * @param {number} limit - limit number of reviews (max 1000)
+    * @returns {array} - The reviews of the hotel
+    */
+    async getHotelReviews(hotelId, limit) {
+        let errors = [];
+        if (hotelId == "" || hotelId === undefined) {
+            errors.push("The Hotel code is required");
+        }
+
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            }
+        }
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+        };
+
+        const response = await fetch(`${this.serviceURL}/data/reviews?hotelId=${hotelId}&limit=${limit}&timeout=5`, options);
+        const data = await response.json();
+
         if (!response.ok) {
             return {
                 "status": "failed",
