@@ -25,18 +25,18 @@ class LiteApi {
             body: JSON.stringify(data)
         };
         const response = await fetch(this.serviceURL + '/hotels/rates', options);
-        const data = await response.json();
+        const result = await response.json();
 
         if (!response.ok) {
             return {
                 "status": "failed",
-                "error": data.error
+                "error": result.error
             }
         }
 
         return {
             "status": "success",
-            "data": data.data
+            "data": result.data
         }
     }
     /**
