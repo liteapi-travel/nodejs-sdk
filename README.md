@@ -378,15 +378,14 @@ The second parameter is a boolean value that indicates if the payment will use t
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-    const rateIds = ["NRYDCZRZHAZHYMRQGIZS2MBXFUYTK7BSGAZDGLJQG4WTCNT4GJ6HYVKTPRDVSWSEJVMVUV2HIUZUOS2OKJKEOWKZKRCU2QSXJVETGRCTJZKEMR2ZGNMFSTKKIRDUSWKEIVGVUUKHGRMVISZXIJJUOQK2IRDU2QSYI5CTGSCZLJGE6TBVJNLEON2DKZFU4NSGJNKTERKQKFNEKQ2NINCFAUK2IRCU6QSUKBJEWVCFKZJVST2KGZCEGTSSLFEEKWKEINHFUV2HKUZVIUKOJJNE6QSELBHVKQSEI5CVURCTJZBFER2BKJKEOTKKJZDUKWSEKNHEEUSHII3EMRKSKNHVAUK2IRAU2USUI5ATGVCDJVJFCR2FLFCECN2CKRIFCWKUJFHEEVCHLFJFMRKULJCEWSSEIU2ESWSTI5AVURCHJRFFCRZUK5KEGTKRPRKVGRD4PR6DCNRWFYYDC7BSGAZDGLJQG4WTCMT4IJHXYMJSHE2DCMD4GI"];
-    const result = await liteApi.preBook(rateIds, true)
+    const offerId = ["abcde123"];
+    const result = await liteApi.preBook({ offerId, usePaymentSdk: true, voucherCode: "1234" });
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**rateIds** | **array** | rate id retrieved from getFullRates response | [required]
-**payment** | **boolean** | whether the payment wrapper SDK is going to be used for this transaction | [required]
+**data** | **object** | the input parameters for the API request | [required]
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 

@@ -43,13 +43,12 @@ class LiteApi {
      * This API is used to confirm if the room and rates for the search criterion. The input to the endpoint is an array of rate Ids coming from the GET hotel full rates availability API.
         In response, the API generates a prebook Id, a new rate Id and contains information if price, cancellation policy or boarding information has changed.
      *
-     * @param {array} rateId - Rate ids retrieved from rates response.
-     * @param {boolean} usePaymentSdk - Whether the payment wrapper SDK is going to be used for this transaction.
+     * @param {array} data - The input parameters for the API
      * @returns {object} - The result of the operation.
      */
-    async preBook(rateIds, usePaymentSdk) {
+    async preBook(data) {
         let errors = [];
-        if (!Array.isArray(rateIds) || rateIds.length == 0) {
+        if (typeof data !== 'object' || !Array.isArray(data.rateIds) || data.rateIds.length == 0) {
             errors.push("The rate IDs are required");
         }
         if (errors.length > 0) {
@@ -65,23 +64,20 @@ class LiteApi {
                 'content-type': 'application/json',
                 'X-API-Key': this.apiKey
             },
-            body: JSON.stringify({
-                rateIds: rateIds,
-                usePaymentSdk: usePaymentSdk
-            })
+            body: JSON.stringify(data)
         };
         const response = await fetch(this.bookServiceURL + '/rates/prebook', options);
-        const data = await response.json();
+        const result = await response.json();
         if (!response.ok) {
             return {
                 "status": "failed",
-                "error": data.error
+                "error": result.error
             }
         }
 
         return {
             "status": "success",
-            "data": data.data
+            "data": result.data
         }
     }
     /**
