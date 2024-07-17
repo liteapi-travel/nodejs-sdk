@@ -89,70 +89,9 @@ class LiteApi {
 
     The response will confirm the booking along with a booking Id and a hotel confirmation code. It will also include the booking details including the dates, price and the cancellation policies.
      *
-     * @param {string} prebookId - prebook id retrived from prebook response.
-     * @param {object} guestInfo - Format : {guestFirstName: 'Kim', guestLastName: 'James', guestEmail: 'test@nlite.ml'}.
-     * @param {string} paymentMethod - Should be STRIPE_TOKEN or CREDIT_CARD.
-     * @param {string} holderName - The holder name
-     * @param {object} paymentInfo - If STRIPE_TOKEN is selected then {"token":YOUR_STRIPE_TOKEN}, if CREDIT_CARD is select then {"card_number" : "4242424242424242","exp_month":11,exp_year:"23","cvc":123}
-     * @returns {object} - The result of the operation.
+     * @param {object} data - the API request parameters
      */
-    async book(prebookId, guestInfo, paymentMethod, holderName, paymentInfo) {
-        let errors = [];
-        let payment = {};
-        if (prebookId == "" || prebookId === undefined) {
-            errors.push("The prebook ID is required");
-        }
-        if (guestInfo == "" || guestInfo === undefined || typeof guestInfo !== 'object') {
-            errors.push("Invalid guestInfo, it should be in this format : {guestFirstName: 'Kim', guestLastName: 'James', guestEmail: 'test@nlite.ml'}");
-        } else {
-            if (!guestInfo.hasOwnProperty('guestFirstName') || !guestInfo.hasOwnProperty('guestLastName') || !guestInfo.hasOwnProperty('guestEmail')) {
-                errors.push("Invalid guestInfo, it should be in this format : {guestFirstName: 'Kim', guestLastName: 'James', guestEmail: 'test@nlite.ml'}");
-            }
-        }
-        if (paymentMethod == "" || paymentMethod === undefined) {
-            errors.push("Payment Method is required");
-        } else {
-            if (!["CREDIT_CARD", "STRIPE_TOKEN"].includes(paymentMethod)) {
-                errors.push("Available Payment Method are : CREDIT_CARD and STRIPE_TOKEN");
-            } else {
-                payment["method"] = paymentMethod;
-            }
-        }
-        if (holderName == "" || holderName === undefined) {
-            errors.push("Holder name is required");
-        } else {
-            payment["holderName"] = holderName;
-        }
-        if (paymentMethod == "CREDIT_CARD") {
-            if (paymentInfo != "" && paymentInfo !== undefined && typeof paymentInfo === 'object') {
-                if (!paymentInfo.hasOwnProperty('card_number') || !paymentInfo.hasOwnProperty('exp_month') || !paymentInfo.hasOwnProperty('exp_year') || !paymentInfo.hasOwnProperty('cvc')) {
-                    errors.push('The paymentInfo object is invalid, it should be in this format: {"card_number" : "4242424242424242","exp_month":11,exp_year:"23","cvc":123}');
-                } else {
-                    payment["number"] = paymentInfo.card_number;
-                    payment["expireDate"] = paymentInfo.exp_month + "/" + paymentInfo.exp_year;
-                    payment["cvc"] = paymentInfo.cvc + "";
-                }
-            } else {
-                errors.push('The paymentInfo object should in this format: {"card_number" : "4242424242424242","exp_month":11,exp_year:"23","cvc":123}');
-            }
-        } else if (paymentInfo == "STRIPE_TOKEN") {
-            if (paymentInfo != "" && paymentInfo !== undefined && typeof paymentInfo === 'object') {
-                if (!paymentInfo.hasOwnProperty('token')) {
-                    errors.push('The paymentInfo object is invalid, it should be in this format:{"token":YOUR_STRIPE_TOKEN}');
-                } else {
-                    payment["token"] = paymentInfo.token;
-                }
-            } else {
-                errors.push('The paymentInfo object should in this format: {"token":YOUR_STRIPE_TOKEN}');
-            }
-        }
-
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
+    async book(data) {
         const options = {
             method: 'POST',
             headers: {
@@ -160,24 +99,20 @@ class LiteApi {
                 'content-type': 'application/json',
                 'X-API-Key': this.apiKey
             },
-            body: JSON.stringify({
-                prebookId: prebookId,
-                guestInfo: guestInfo,
-                payment: payment
-            })
+            body: JSON.stringify(data)
         };
         const response = await fetch(this.bookServiceURL + '/rates/book', options)
-        const data = await response.json();
+        const result = await response.json();
         if (!response.ok) {
             return {
                 "status": "failed",
-                "error": data.error
+                "error": result.error
             }
         }
 
         return {
             "status": "success",
-            "data": data.data
+            "data": result.data
         }
     }
     /**

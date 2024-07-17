@@ -442,14 +442,26 @@ The response will confirm the booking along with a booking Id and a hotel confir
 
 
 ```js
-const prebookId = "8iaO7PXBU";
-const guestInfo = { guestFirstName: 'Kim', guestLastName: 'James', guestEmail: 'test@nlite.ml' };
-const paymentMethod = "CREDIT_CARD";
-const holderName = "Kim James";
-const paymentInfo = { "card_number": "4242424242424242", "exp_month": 11, "exp_year": 23, "cvc": 123,"token":null }
-
-const result = await liteApi.book(prebookId, guestInfo, paymentMethod, holderName, paymentInfo)
-
+const result = await liteApi.book({
+  holder: {
+    firstName: 'Steve',
+    lastName: 'Doe',
+    email: 's.doe@liteapi.travel'
+  },
+  payment: {
+    method: 'TRANSACTION_ID',
+    transactionId: '456'
+  },
+  prebookId: '123',
+  guests: [
+    {
+      occupancyNumber: 1,
+      firstName: 'Sunny',
+      lastName: 'Mars',
+      email: 's.mars@liteapi.travel'
+    }
+  ]
+});
 ```
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
 
