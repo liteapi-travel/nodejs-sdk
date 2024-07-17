@@ -48,8 +48,8 @@ class LiteApi {
      */
     async preBook(data) {
         let errors = [];
-        if (typeof data !== 'object' || !Array.isArray(data.rateIds) || data.rateIds.length == 0) {
-            errors.push("The rate IDs are required");
+        if (typeof data !== 'object' || typeof data.offerId !== 'string' || !data.offerId) {
+            errors.push("The offerId is required");
         }
         if (errors.length > 0) {
             return {
