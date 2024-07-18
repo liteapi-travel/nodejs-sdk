@@ -340,10 +340,11 @@ Name | Type | Description  | Notes
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
 
-An array of hotel full rates with the following properties:
+An array of hotel full rates with the following properties for each `roomType`:
 
 | Name         | Type   | Description                                      |
 | ------------ | ------ | ------------------------------------------------ |
+| **offerId** | **string** | The offer for this rate. To be used when calling the prebook endpoint                                                                             |
 | **roomTypeId** | **string** | The ID of the room type.                                                                                |
 | **supplier**   | **string** | The name of the supplier.                                                                               |
 | **supplierId** | **number** | The ID of the supplier.                                                                                 |
@@ -372,9 +373,8 @@ An array of hotel full rates with the following properties:
 ### Hotel rate prebook
 ------
 
-The preBook function is used to confirm if the room rates are still available before a booking function can be called. The input to the function is a list of rate Ids coming from the getFullRates function.
+The preBook function is used to confirm if the room rates are still available before a booking function can be called. The input to the function is an object that maps to the available options in the API documentation for the prebook endpoint.
 The function returns a prebook Id, a new rate Id and also contains information if the price, cancellation policy or boarding information changed.
-The second parameter is a boolean value that indicates if the payment will use the client-side payment wrapper SDK.
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
