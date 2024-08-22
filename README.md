@@ -51,7 +51,6 @@ LiteAPI opens up a range of powerful functions for travel and hospitality applic
 <br><br>
 All these features make LiteAPI a comprehensive solution for travel app development, offering a plethora of functionalities, from search and booking to management and cancellation. Developers can harness these powerful tools to create high-quality, user-friendly travel applications.
 <br><br>
-<br><br>
 <h3 style="font-weight: 500; display:inline">Vouchers:</h3> LiteAPI allows developers to manage and retrieve vouchers, adding an extra layer of value to users by offering discounts or special offers through the app.
 <br><br>
 <h3 style="font-weight: 500; display:inline">Loyalty Program:</h3> LiteAPI integrates a loyalty program that rewards users for their continued patronage, allowing developers to offer a more personalized experience.
