@@ -13,9 +13,6 @@
   - [Hotel details](#hotel-details)
   - [Hotel reviews](#hotel-reviews)
   - [IATA code list](#iata-code-list)
-  - [Vouchers](#vouchers)
-  - [Voucher Details](#voucher-details)
-  - [Loyalty Program](#loyalty-program)
 - [Booking flow](#booking-flow)
   - [Search](#search)
     - [Hotel full rates availability](#hotel-full-rates-availability)
@@ -26,6 +23,10 @@
     - [Booking list](#booking-list)
     - [Booking retrieve](#booking-retrieve)
     - [Booking cancel](#booking-cancel)
+- [Vouchers and Loyalty](#vouchers-and-loyalty)
+  - [Vouchers](#vouchers)
+  - [Voucher Details](#voucher-details)
+  - [Loyalty Program](#loyalty-program)
 - [Example Project](#example-project)
 
 # Introduction
@@ -299,79 +300,6 @@ An array of IATA objects with the following properties:
 | **latitude**    | **number** | The latitude coordinates of the IATA.          |
 | **longitude**   | **number** | The longitude coordinates of the IATA.         |
 | **countryCode** | **string** | The country code of the IATA.                  |
-
-<br>
-
-## Vouchers
-
-The `getVouchers` function retrieves a list of all available vouchers. This endpoint provides details such as the voucher code, discount type and value, validity period, and other relevant information.
-
-* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
-
-```js
-const result = await liteApi.getVouchers();
-```
-*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
-
-This function does not need any additional parameters.
-
-* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
-
-An object containing the following properties:
-name | Type | Description
-------|------|------------
-**status** | **string** | Status of the operation.
-**data**   | **array**  | List of available vouchers.
-
-<br>
-
-## Voucher Details
-
-The `getVoucherById` function retrieves details of a specific voucher by its ID. This includes the voucher code, discount details, usage limits, and more.
-
-* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
-
-```js
-const voucherID = "your_voucher_id";
-const result = await liteApi.getVoucherById(voucherID);
-```
-
-* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **voucherID** | **string**| The unique ID of the voucher.	| [required]
-
-* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
-
-An object containing the following properties:
-name | Type | Description
-------|------|------------
-**status** | **string** | Status of the operation.
-**data**   | **object**  | Details of the specific voucher.
-
-<br>
-
-## Loyalty Program
-
-The `getLoyalty` function retrieves information about current loyalty program settings, including status and cashback rates.
-
-
-* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
-```js
-const result = await liteApi.getLoyalty();
-```
-*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
-
-This function does not need any additional parameters.
-
-* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
-
-An object containing the following properties:
-name | Type | Description
-------|------|------------
-**status** | **string** | Status of the operation.
-**data**   | **object**  | Details of the loyalty program.
 
 <br>
 
@@ -714,6 +642,80 @@ Name | Type | Description  | Notes
 
 <br>
 
+# Vouchers and Loyalty
+
+## Vouchers
+
+The `getVouchers` function retrieves a list of all available vouchers. This endpoint provides details such as the voucher code, discount type and value, validity period, and other relevant information.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.getVouchers();
+```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **array**  | List of available vouchers.
+
+<br>
+
+## Voucher Details
+
+The `getVoucherById` function retrieves details of a specific voucher by its ID. This includes the voucher code, discount details, usage limits, and more.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const voucherID = "your_voucher_id";
+const result = await liteApi.getVoucherById(voucherID);
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **voucherID** | **string**| The unique ID of the voucher.	| [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object**  | Details of the specific voucher.
+
+<br>
+
+## Loyalty Program
+
+The `getLoyalty` function retrieves information about current loyalty program settings, including status and cashback rates.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+```js
+const result = await liteApi.getLoyalty();
+```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object**  | Details of the loyalty program.
+
+<br>
 
 # Example Project
 To see an example project demonstrating how to integrate the SDK, visit [liteAPI-nodejs-sdk-examples](https://github.com/liteapi-travel/nodejs-sdk-examples)
