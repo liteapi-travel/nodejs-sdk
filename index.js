@@ -3,6 +3,7 @@ class LiteApi {
         this.apiKey = apiKey;
         this.serviceURL = "https://api.liteapi.travel/v3.0";
         this.bookServiceURL = "https://book.liteapi.travel/v3.0";
+        this.dashboardURL = 'https://da.liteapi.travel';
     }
     /**
      * The Full Rates API is to search and return all available rooms along with its rates, cancellation policies for a list of hotel ID's based on the search dates.
@@ -552,6 +553,102 @@ class LiteApi {
             "status": "success",
             "data": data.data
         }
+    }
+    /**
+     * Retrieves all available vouchers.
+     * @returns {object} - The result of the operation.
+     */
+    async getVouchers() {
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-Api-Key': this.apiKey
+            },
+        };
+
+        const response = await fetch(this.dashboardURL + '/vouchers', options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+
+    /**
+     * Retrieves a voucher by its ID.
+     * @param {string} voucherID - The unique ID of the voucher.
+     * @returns {object} - The result of the operation.
+     */
+    async getVoucherById(voucherID) {
+        if (!voucherID || typeof voucherID !== 'string') {
+            return {
+                "status": "failed",
+                "error": "The voucher ID is required and must be a string."
+            };
+        }
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-Api-Key': this.apiKey
+            },
+        };
+
+        const response = await fetch(`${this.dashboardURL}/vouchers/${voucherID}`, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+    /**
+     * Fetches the current loyalty program information.
+     * @returns {object} - The result of the operation.
+     */
+    async getLoyalty() {
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+        };
+        
+        const response = await fetch(`${this.serviceURL}/loyalties/`, options);
+        const result = await response.json();
+        
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+        
+        return {
+            "status": "success",
+            "data": result.data
+        };
     }
 }
 

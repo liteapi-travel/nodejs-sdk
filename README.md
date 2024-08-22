@@ -23,6 +23,10 @@
     - [Booking list](#booking-list)
     - [Booking retrieve](#booking-retrieve)
     - [Booking cancel](#booking-cancel)
+- [Vouchers and Loyalty](#vouchers-and-loyalty)
+  - [Vouchers](#vouchers)
+  - [Voucher Details](#voucher-details)
+  - [Loyalty Program](#loyalty-program)
 - [Example Project](#example-project)
 
 # Introduction
@@ -47,6 +51,10 @@ LiteAPI opens up a range of powerful functions for travel and hospitality applic
 <h3 style="font-weight: 500; display:inline">Booking Retrieval and Cancellation:</h3> Lastly, LiteAPI offers the capability to retrieve and cancel existing bookings. This added flexibility is crucial for users who might need to alter their travel plans.
 <br><br>
 All these features make LiteAPI a comprehensive solution for travel app development, offering a plethora of functionalities, from search and booking to management and cancellation. Developers can harness these powerful tools to create high-quality, user-friendly travel applications.
+<br><br>
+<h3 style="font-weight: 500; display:inline">Vouchers:</h3> LiteAPI allows developers to manage and retrieve vouchers, adding an extra layer of value to users by offering discounts or special offers through the app.
+<br><br>
+<h3 style="font-weight: 500; display:inline">Loyalty Program:</h3> A comprehensive loyalty system within liteAPI, which includes guest tracking, loyalty points accrual, and retrieval of guest booking history and information via a unique guestId.
 <br><br>
 
 Don't have an account yet?  Sign Up [Here](https://dashboard.liteapi.travel/register/).
@@ -634,6 +642,82 @@ Name | Type | Description  | Notes
 
 <br>
 
+# Vouchers and Loyalty
+
+LiteAPI provides straightforward access to voucher details, including codes and discounts, along with current loyalty program status and cashback rates.
+
+## Vouchers
+
+The `getVouchers` function retrieves a list of all available vouchers. This endpoint provides details such as the voucher code, discount type and value, validity period, and other relevant information.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.getVouchers();
+```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **array**  | List of available vouchers.
+
+<br>
+
+## Voucher Details
+
+The `getVoucherById` function retrieves details of a specific voucher by its ID. This includes the voucher code, discount details, usage limits, and more.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const voucherID = "your_voucher_id";
+const result = await liteApi.getVoucherById(voucherID);
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **voucherID** | **string**| The unique ID of the voucher.	| [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object**  | Details of the specific voucher.
+
+<br>
+
+## Loyalty Program
+
+The `getLoyalty` function retrieves information about current loyalty program settings, including status and cashback rates.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+```js
+const result = await liteApi.getLoyalty();
+```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object**  | Details of the loyalty program.
+
+<br>
 
 # Example Project
 To see an example project demonstrating how to integrate the SDK, visit [liteAPI-nodejs-sdk-examples](https://github.com/liteapi-travel/nodejs-sdk-examples)
