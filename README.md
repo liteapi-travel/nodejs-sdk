@@ -53,7 +53,7 @@ All these features make LiteAPI a comprehensive solution for travel app developm
 <br><br>
 <h3 style="font-weight: 500; display:inline">Vouchers:</h3> LiteAPI allows developers to manage and retrieve vouchers, adding an extra layer of value to users by offering discounts or special offers through the app.
 <br><br>
-<h3 style="font-weight: 500; display:inline">Loyalty Program:</h3> LiteAPI integrates a loyalty program that rewards users for their continued patronage, allowing developers to offer a more personalized experience.
+<h3 style="font-weight: 500; display:inline">Loyalty Program:</h3> A comprehensive loyalty system within liteAPI, which includes guest tracking, loyalty points accrual, and retrieval of guest booking history and information via a unique guestId.
 <br><br>
 
 Don't have an account yet?  Sign Up [Here](https://dashboard.liteapi.travel/register/).
@@ -304,7 +304,7 @@ An array of IATA objects with the following properties:
 
 ## Vouchers
 
-The `getVouchers` function retrieves a list of all available vouchers.
+The `getVouchers` function retrieves a list of all available vouchers. This endpoint provides details such as the voucher code, discount type and value, validity period, and other relevant information.
 
 * <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
 
@@ -327,7 +327,7 @@ name | Type | Description
 
 ## Voucher Details
 
-The `getVoucherById` function retrieves details of a specific voucher by its ID.
+The `getVoucherById` function retrieves details of a specific voucher by its ID. This includes the voucher code, discount details, usage limits, and more.
 
 * <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
 
@@ -354,7 +354,7 @@ name | Type | Description
 
 ## Loyalty Program
 
-The `getLoyalty` function fetches the current loyalty program information.
+The `getLoyalty` function retrieves information about current loyalty program settings, including status and cashback rates.
 
 
 * <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
