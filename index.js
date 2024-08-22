@@ -3,7 +3,7 @@ class LiteApi {
         this.apiKey = apiKey;
         this.serviceURL = "https://api.liteapi.travel/v3.0";
         this.bookServiceURL = "https://book.liteapi.travel/v3.0";
-        this.baseUrl = 'https://da.liteapi.travel';
+        this.dashboardURL = 'https://da.liteapi.travel';
     }
     /**
      * The Full Rates API is to search and return all available rooms along with its rates, cancellation policies for a list of hotel ID's based on the search dates.
@@ -568,7 +568,7 @@ class LiteApi {
             },
         };
 
-        const response = await fetch(this.baseUrl + '/vouchers', options);
+        const response = await fetch(this.dashboardURL + '/vouchers', options);
         const result = await response.json();
 
         if (!response.ok) {
@@ -606,7 +606,7 @@ class LiteApi {
             },
         };
 
-        const response = await fetch(`${this.baseUrl}/vouchers/${voucherID}`, options);
+        const response = await fetch(`${this.dashboardURL}/vouchers/${voucherID}`, options);
         const result = await response.json();
 
         if (!response.ok) {

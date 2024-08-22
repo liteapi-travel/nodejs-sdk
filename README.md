@@ -13,6 +13,9 @@
   - [Hotel details](#hotel-details)
   - [Hotel reviews](#hotel-reviews)
   - [IATA code list](#iata-code-list)
+  - [Vouchers](#vouchers)
+  - [Voucher Details](#voucher-details)
+  - [Loyalty Program](#loyalty-program)
 - [Booking flow](#booking-flow)
   - [Search](#search)
     - [Hotel full rates availability](#hotel-full-rates-availability)
@@ -47,6 +50,11 @@ LiteAPI opens up a range of powerful functions for travel and hospitality applic
 <h3 style="font-weight: 500; display:inline">Booking Retrieval and Cancellation:</h3> Lastly, LiteAPI offers the capability to retrieve and cancel existing bookings. This added flexibility is crucial for users who might need to alter their travel plans.
 <br><br>
 All these features make LiteAPI a comprehensive solution for travel app development, offering a plethora of functionalities, from search and booking to management and cancellation. Developers can harness these powerful tools to create high-quality, user-friendly travel applications.
+<br><br>
+<br><br>
+<h3 style="font-weight: 500; display:inline">Vouchers:</h3> LiteAPI allows developers to manage and retrieve vouchers, adding an extra layer of value to users by offering discounts or special offers through the app.
+<br><br>
+<h3 style="font-weight: 500; display:inline">Loyalty Program:</h3> LiteAPI integrates a loyalty program that rewards users for their continued patronage, allowing developers to offer a more personalized experience.
 <br><br>
 
 Don't have an account yet?  Sign Up [Here](https://dashboard.liteapi.travel/register/).
@@ -292,6 +300,71 @@ An array of IATA objects with the following properties:
 | **latitude**    | **number** | The latitude coordinates of the IATA.          |
 | **longitude**   | **number** | The longitude coordinates of the IATA.         |
 | **countryCode** | **string** | The country code of the IATA.                  |
+
+<br>
+
+## Vouchers
+
+The `getVouchers` function retrieves a list of all available vouchers.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.getVouchers();
+```
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **array**  | List of available vouchers.
+
+<br>
+
+## Voucher Details
+
+The `getVoucherById` function retrieves details of a specific voucher by its ID.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const voucherID = "your_voucher_id";
+const result = await liteApi.getVoucherById(voucherID);
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **voucherID** | **string**| The unique ID of the voucher.	| [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object**  | Details of the specific voucher.
+
+<br>
+
+## Loyalty Program
+
+The `getLoyalty` function fetches the current loyalty program information.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+```js
+const result = await liteApi.getLoyalty();
+```
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name | Type | Description
+------|------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object**  | Details of the specific voucher.
 
 <br>
 
