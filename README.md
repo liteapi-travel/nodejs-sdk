@@ -312,7 +312,11 @@ The `getVouchers` function retrieves a list of all available vouchers.
 ```js
 const result = await liteApi.getVouchers();
 ```
-* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
 
 An object containing the following properties:
 name | Type | Description
@@ -358,13 +362,17 @@ The `getLoyalty` function fetches the current loyalty program information.
 ```js
 const result = await liteApi.getLoyalty();
 ```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
 * <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
 
 An object containing the following properties:
 name | Type | Description
 ------|------|------------
 **status** | **string** | Status of the operation.
-**data**   | **object**  | Details of the specific voucher.
+**data**   | **object**  | Details of the loyalty program.
 
 <br>
 
