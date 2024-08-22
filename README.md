@@ -644,6 +644,8 @@ Name | Type | Description  | Notes
 
 # Vouchers and Loyalty
 
+LiteAPI provides straightforward access to voucher details, including codes and discounts, along with current loyalty program status and cashback rates.
+
 ## Vouchers
 
 The `getVouchers` function retrieves a list of all available vouchers. This endpoint provides details such as the voucher code, discount type and value, validity period, and other relevant information.
