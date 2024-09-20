@@ -270,6 +270,38 @@ class LiteApi {
         }
     }
     /**
+    * Look up for a list of places and areas, given a search query. Places can be used to search for hotels within a location and restrict the list to results within the boundaries of a selected place.
+    * @param {string} textQuery - Search query. e.g. 'Manhattan'
+    * * @param {string} type - Restricts the results to places matching the specified type. e.g. 'hotel'
+    * * @param {string} language - The language code, indicating in which language the results should be returned. e.g. 'en'
+    * @returns {array} - The result of the operation.
+    */
+    async getPlaces(textQuery, type, language) {
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+        };
+        const response = await fetch(this.serviceURL + '/data/places?textQuery=' + encodeURIComponent(textQuery) + '&type=' + (type ? encodeURIComponent(type) : '') + '&language=' + (language || 'en'), options);
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": data.error
+            }
+        }
+
+        return {
+            "status": "success",
+            "data": data.data
+        }
+    }
+    /**
     * The API returns all available currency codes along with its name and the list of supported countries that the currency applies to.
     * @returns {array} - The result of the operation.
     */
@@ -634,17 +666,17 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        
+
         const response = await fetch(`${this.serviceURL}/loyalties/`, options);
         const result = await response.json();
-        
+
         if (!response.ok) {
             return {
                 "status": "failed",
                 "error": result.error
             };
         }
-        
+
         return {
             "status": "success",
             "data": result.data

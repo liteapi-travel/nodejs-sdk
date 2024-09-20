@@ -6,6 +6,7 @@
 - [Installing](#installing)
 - [Usage](#usage)
 - [Static data](#static-data)
+  - [Suggest a list of places](#autosuggest-a-list-of-places)
   - [List of cities](#list-of-cities)
   - [List of Countries](#list-of-countries)
   - [List of available currencies](#list-of-available-currencies)
@@ -80,6 +81,32 @@ const liteApi = require('liteapi-node-sdk')(YOUR_API_KEY);
 # Static data
 
 Static data can be directly fetched from the functions below. Alternatively, LiteAPI also provides an option to download static data directly from the [Github URL](STATICDATA.md).
+
+## Suggest a list of places
+The `getPlaces` function look up for a list of places and areas, given a search query. Places can be used to search for hotels within a location and restrict the list to results within the boundaries of a selected place.
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
+```js
+const result = await liteApi.getPlaces('Manhattan');
+```
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **textQuery** | **string**| Search query. e.g. 'Manhattan' | [required]
+ **type** | **string**| Restricts the results to places matching the specified type. e.g. 'hotel' | [optional]
+ **language** | **string**| The language code, indicating in which language the results should be returned. e.g. 'en' | [optional]
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
+
+An array of city objects containing the following properties:
+
+Field | Type | Description
+------|------|------------
+**data** | **object** | An array of the suggested places.
+
+<br>
 
 ## List of cities
 
