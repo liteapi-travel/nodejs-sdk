@@ -6,7 +6,7 @@
 - [Installing](#installing)
 - [Usage](#usage)
 - [Static data](#static-data)
-  - [Suggest a list of places](#autosuggest-a-list-of-places)
+  - [Suggest a list of places](#suggest-a-list-of-places)
   - [List of cities](#list-of-cities)
   - [List of Countries](#list-of-countries)
   - [List of available currencies](#list-of-available-currencies)
