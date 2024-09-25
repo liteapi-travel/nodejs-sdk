@@ -1,10 +1,10 @@
 {
   "name": "liteapi-node-sdk",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Start building travel apps with liteAPI. Instantly access millions of hotels to build new or existing apps and platforms.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/test.js"
   },
   "repository": {
     "type": "git",

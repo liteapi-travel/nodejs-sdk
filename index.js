@@ -336,51 +336,13 @@ class LiteApi {
         }
     }
     /**
-    * The API returns a list of hotels available based on different search criterion. The minimum required information is the county code in ISO-2 format.
-    * @param {string} countryCode - country code ISO-2 code - example (SG)
-    * @param {string} cityName - name of the city
-    * @param {number} offset - specifies the number of rows to skip before starting to return rows
-    * @param {number} limit - limit number of results (max 1000)
-    * @param {string} longitude - longitude geo coordinates
-    * @param {string} latitude - latitude geo coordinates
-    * @param {number} distance - in meters (min 1000m)
+    * This API endpoint returns a list of hotels available based on different search criterion.
+    * The minimum required information is the country code in ISO-2 format. The API supports additional search criteria such as city name, geo coordinates, and radius.
+    * This endpoint provides detailed hotel metadata, including names, addresses, ratings, amenities, and images, facilitating robust hotel search and display features within applications.
+    * @param {string} parameters - The search criteria parameters.
     * @returns {array} - The result of the operation.
     */
-    async getHotels(countryCode, cityName, offset, limit, longitude, latitude, distance) {
-        let errors = [];
-        let paramQuery = {};
-        if (countryCode == "" || countryCode === undefined) {
-            errors.push("Country code is required");
-        } else {
-            paramQuery['countryCode'] = countryCode;
-        }
-        if (cityName == "" || cityName === undefined) {
-            errors.push("City name is required");
-        } else {
-            paramQuery['cityName'] = cityName;
-        }
-
-        if (offset != "" && offset !== undefined) {
-            paramQuery['offset'] = offset;
-        }
-        if (limit != "" && limit !== undefined) {
-            paramQuery['limit'] = limit;
-        }
-        if (longitude != "" && longitude !== undefined) {
-            paramQuery['longitude'] = longitude;
-        }
-        if (latitude != "" && latitude !== undefined) {
-            paramQuery['latitude'] = latitude;
-        }
-        if (distance != "" && distance !== undefined) {
-            paramQuery['distance'] = distance;
-        }
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
+    async getHotels(parameters) {
         const options = {
             method: 'GET',
             headers: {
@@ -389,9 +351,11 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const query = decodeURIComponent(new URLSearchParams(paramQuery).toString());
+
+        const query = decodeURIComponent(new URLSearchParams(parameters || {}).toString());
         const response = await fetch(this.serviceURL + '/data/hotels?' + query, options)
         const data = await response.json();
+
         if (!response.ok) {
             return {
                 "status": "failed",
