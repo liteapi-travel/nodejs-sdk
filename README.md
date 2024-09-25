@@ -183,39 +183,19 @@ An array of currency objects containing the following properties:
 
 ## List of hotels
 
-The getHotels function returns a list of hotels available based on different search criteria. The minimum required information is the country code in ISO-2 format.
+The `getHotels` function returns a list of hotels available based on different search criterion.
+The API supports additional search criteria such as city name, geo coordinates, and radius.
+This function provides detailed hotel metadata, including names, addresses, ratings, amenities, and images, facilitating robust hotel search and display features within applications.
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 ```js
-    const countryCode = "IT";
-    const cityName = "Rome";
-    //Optional values
-    const offset = 1000;
-    const limit = 1000;
-    const longitude = "-115.16988";
-    const latitude = "36.12510";
-    const distance = 1000;
-
-    const result = await liteApi.getHotels(countryCode, cityName);
+const result = await liteApi.getHotels({
+    countryCode: 'IT',
+    cityName: 'Rome'
+});
 ```
 
-To utilize optional values, you can invoke the function as follows:
-
-```js
-    const result = await liteApi.getHotels(countryCode, cityName, offset, limit, longitude, latitude, distance)
-```
-
-*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **countryCode** | **string**| country code ISO-2 code - example (US) | [required]
- **cityName** | **string**| name of the city | [required]
- **offset** | **number**| specifies the number of rows to skip before starting to return rows | [optional]
- **limit** | **number**| limit number of results (max 1000) | [optional]
- **longitude** | **string** | longitude geo coordinates | [optional]
- **latitude** | **string** | latitude geo coordinates | [optional]
- **distance** | **number** | distance in meters (min 1000m) | [optional]
+Please refer to the [documentation of this endpoint](https://docs.liteapi.travel/reference/get_data-hotels) for the full list of parameters and their descriptions.
 
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
