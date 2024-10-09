@@ -37,13 +37,12 @@ class LiteApi {
 
         return {
             "status": "success",
-            "data": result.data
+            "data": result
         }
     }
     /**
      * This API is used to confirm if the room and rates for the search criterion. The input to the endpoint is an array of rate Ids coming from the GET hotel full rates availability API.
-        In response, the API generates a prebook Id, a new rate Id and contains information if price, cancellation policy or boarding information has changed.
-     *
+     * In response, the API generates a prebook Id, a new rate Id and contains information if price, cancellation policy or boarding information has changed.
      * @param {array} data - The input parameters for the API
      * @returns {object} - The result of the operation.
      */
@@ -93,6 +92,16 @@ class LiteApi {
      * @param {object} data - the API request parameters
      */
     async book(data) {
+        let errors = [];
+        if (typeof data !== 'object' || typeof data.prebookId !== 'string' || !data.prebookId) {
+            errors.push("The offerId is required");
+        }
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            }
+        }
         const options = {
             method: 'POST',
             headers: {
@@ -118,15 +127,11 @@ class LiteApi {
     }
     /**
      * The API returns the list of booking Id's for a given guest Id.
-     *
-     * @param {string} guestId - The Guest Id of the user.
+     * @param {string} clientReference - The request timeout value in seconds (default: 1.5).
      * @returns {object} - The result of the operation.
      */
-    async getBookingListByGuestId(guestId) {
+    async getBookingsList(clientReference) {
         let errors = [];
-        if (guestId == "" || guestId === undefined) {
-            errors.push("The guest ID is required");
-        }
 
         if (errors.length > 0) {
             return {
@@ -142,7 +147,7 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const response = await fetch(this.bookServiceURL + '/bookings?guestId=' + guestId, options)
+        const response = await fetch(this.bookServiceURL + '/bookings?clientReference=' + clientReference , options)
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -323,6 +328,108 @@ class LiteApi {
             },
         };
         const response = await fetch(this.serviceURL + '/data/currencies', options)
+        const data = await response.json();
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": data.error
+            }
+        }
+        return {
+            "status": "success",
+            "data": data.data
+        }
+    }
+     /**
+    * The API returns the list of hotel facilities available in the system.
+    * @returns {array} - The result of the operation.
+    */
+     async getHotelFacilities() {
+        let errors = [];
+
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            }
+        }
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+        };
+        const response = await fetch(this.serviceURL + '/data/facilities', options)
+        const data = await response.json();
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": data.error
+            }
+        }
+        return {
+            "status": "success",
+            "data": data.data
+        }
+    }
+     /**
+    * The API returns a list of available hotel types.
+    * @returns {array} - The result of the operation.
+    */
+     async getHotelTypes() {
+        let errors = [];
+
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            }
+        }
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+        };
+        const response = await fetch(this.serviceURL + '/data/hotelTypes', options)
+        const data = await response.json();
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": data.error
+            }
+        }
+        return {
+            "status": "success",
+            "data": data.data
+        }
+    }
+     /**
+    * The API returns a list of available hotel chains.
+    * @returns {array} - The result of the operation.
+    */
+     async getHotelChains() {
+        let errors = [];
+
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            }
+        }
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+        };
+        const response = await fetch(this.serviceURL + '/data/chains', options)
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -517,17 +624,14 @@ class LiteApi {
 
     /**
     * The guests API returns the unique guest ID of a user based on the users email ID.
-    * @param {string} email - Guest email
+    * @param {string} guestId - Numeric ID of the guest to fetch
     * @returns {array} - The result of the operation.
     */
-    async getGuestsIds(email = "") {
-
-        let paramQuery = {};
-
-        if (email != "" && email !== undefined) {
-            paramQuery['email'] = email;
+    async getGuestsIds(guestId) {
+        let errors = [];
+        if (guestId == "" || guestId === undefined) {
+            errors.push("The guestId is required");
         }
-
         const options = {
             method: 'GET',
             headers: {
@@ -536,8 +640,38 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const query = decodeURIComponent(new URLSearchParams(paramQuery).toString());
-        const response = await fetch(this.serviceURL + '/guests?' + query, options)
+        const response = await fetch(this.serviceURL + '/guests/' + guestId, options)
+        const data = await response.json();
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": data.error
+            }
+        }
+        return {
+            "status": "success",
+            "data": data.data
+        }
+    }
+    /**
+    * Retrieves a list of all bookings associated with a specific guest, including details about the points earned and cashback applied for each booking.
+    * @param {string} guestId - Numeric ID of the guest to fetch
+    * @returns {array} - The result of the operation.
+    */
+     async getGuestsBokings(guestId) {
+        let errors = [];
+        if (guestId == "" || guestId === undefined) {
+            errors.push("The guestId is required");
+        }
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+        };
+        const response = await fetch(this.serviceURL + '/guests/' + guestId + '/bookings', options)
         const data = await response.json();
         if (!response.ok) {
             return {
@@ -576,7 +710,7 @@ class LiteApi {
 
         return {
             "status": "success",
-            "data": result.data
+            "data": result
         };
     }
 
@@ -586,11 +720,9 @@ class LiteApi {
      * @returns {object} - The result of the operation.
      */
     async getVoucherById(voucherID) {
-        if (!voucherID || typeof voucherID !== 'string') {
-            return {
-                "status": "failed",
-                "error": "The voucher ID is required and must be a string."
-            };
+        let errors = [];
+        if (voucherID == "" || voucherID === undefined) {
+            errors.push("The voucherID is required");
         }
 
         const options = {
@@ -602,7 +734,7 @@ class LiteApi {
             },
         };
 
-        const response = await fetch(`${this.dashboardURL}/vouchers/${voucherID}`, options);
+        const response = await fetch(this.dashboardURL + '/vouchers/'+ voucherID, options);
         const result = await response.json();
 
         if (!response.ok) {
@@ -614,7 +746,107 @@ class LiteApi {
 
         return {
             "status": "success",
-            "data": result.data
+            "data": result
+        };
+    }
+    /**
+     * Create a new voucher with the specified details, including the voucher code, discount type, value, and validity period. This voucher can then be used by customers.
+     * @param {object} data - The voucher criteria object.
+     * @returns {object} - The result of the operation.
+     */
+    async CreateVoucher(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-Api-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch(this.dashboardURL + '/vouchers', options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            console.error('Create Voucher Error:', result); 
+            return {
+                "status": "failed",
+                "error": result.error || 'An error occurred while creating the voucher.'
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result
+        };
+    }
+     /**
+     * Update the details of an existing voucher, including the voucher code, discount value, validity period, and more.
+     * @param {object} data - The voucher criteria object.
+     * @param {string} id - Unique ID of a voucher
+     * @returns {object} - The result of the operation.
+     */
+    async UpdateVoucher(id, data) {
+        const options = {
+            method: 'PUT',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-Api-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        // Update endpoint to use {id} in the path instead of query parameter
+        const response = await fetch(this.dashboardURL + '/vouchers/' + id, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            console.error('Update Voucher Error:', result); 
+            return {
+                "status": "failed",
+                "error": result.error || 'An error occurred while updating the voucher.'
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result
+        };
+    }   
+    /**
+     * Update the status of a voucher, typically to activate or deactivate it.
+     * @param {object} data - The voucher criteria object.
+     * @param {string} id - Unique ID of a voucher
+     * @returns {object} - The result of the operation.
+     */
+    async UpdateVoucherStatus(id, data) {
+        const options = {
+            method: 'PUT',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-Api-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        // Update endpoint to use {id}/status in the path
+        const response = await fetch(this.dashboardURL + '/vouchers/' + id + '/status', options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            console.error('Update Voucher Status Error:', result); 
+            return {
+                "status": "failed",
+                "error": result.error || 'An error occurred while updating the voucher status.'
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result
         };
     }
     /**
@@ -632,6 +864,192 @@ class LiteApi {
         };
 
         const response = await fetch(`${this.serviceURL}/loyalties/`, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+     /**
+     * Once enable the loyalty program with specified status enabled/disabled and cashback rate (e.g. 0.03 = 3% cashback).
+     * @param {object} data - The loyalty criteria object.
+     * @returns {object} - The result of the operation.
+     */
+     async EnableLoyalty(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch(`${this.serviceURL}/loyalties/`, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+     /**
+     * Updates the loyalty program settings, including status and cashback rates.
+     * @param {object} data - The loyalty criteria object.
+     * @returns {object} - The result of the operation.
+     */
+    async UpdateLoyalty(data) {
+        const options = {
+            method: 'PUT',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch(`${this.serviceURL}/loyalties/`, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+     /**
+     * Fetch weekly analytics data for the specified date range.
+     * @param {object} data - The loyalty analytics object.
+     * @returns {object} - The result of the operation.
+     */
+    async RetrieveWeeklyAanalytics(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch(`${this.dashboardURL}/analytics/weekly`, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+     /**
+     * Fetch a detailed analytics report for the specified date range.
+     * @param {object} data - The loyalty analytics object.
+     * @returns {object} - The result of the operation.
+     */
+    async RetrieveAanalyticsReport(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch(`${this.dashboardURL}/analytics/report`, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+     /**
+     * Fetch market analytics data for the specified date range.
+     * @param {object} data - The loyalty analytics object.
+     * @returns {object} - The result of the operation.
+     */
+     async RetrieveMarketAanalytics(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch(`${this.dashboardURL}/analytics/markets`, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            };
+        }
+
+        return {
+            "status": "success",
+            "data": result.data
+        };
+    }
+     /**
+     * Fetch hotel analytics data for most booked hotels the specified date range.
+     * @param {object} data - The loyalty analytics object.
+     * @returns {object} - The result of the operation.
+     */
+    async RetrieveMostBookedHotels(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch(`${this.dashboardURL}/analytics/hotels`, options);
         const result = await response.json();
 
         if (!response.ok) {

@@ -14,6 +14,9 @@
   - [Hotel details](#hotel-details)
   - [Hotel reviews](#hotel-reviews)
   - [IATA code list](#iata-code-list)
+  - [Hotel facilities](#Hotel-facilities)
+  - [Hotel types](#Hotel-types)
+  - [Hotel chains](#Hotel-chains)
 - [Booking flow](#booking-flow)
   - [Search](#search)
     - [Hotel full rates availability](#hotel-full-rates-availability)
@@ -24,10 +27,23 @@
     - [Booking list](#booking-list)
     - [Booking retrieve](#booking-retrieve)
     - [Booking cancel](#booking-cancel)
-- [Vouchers and Loyalty](#vouchers-and-loyalty)
-  - [Vouchers](#vouchers)
+- [Vouchers](#vouchers)
+  - [Retrieve vouchers](#Retrieve-vouchers)
   - [Voucher Details](#voucher-details)
+  - [Create Voucher](#Create-voucher)
+  - [Update Voucher](#Update-voucher)
+  - [Update Voucher status](#Update-voucher-status)
+- [Loyalty](#Loyalty)
   - [Loyalty Program](#loyalty-program)
+  - [Enable loyalty program](#Enable-loyalty-program)  
+  - [Update loyalty program](#Enable-loyalty-program)
+  - [Fetch specific guest](#Fetch-specific-guest)
+  - [Fetch guest's bookings](#Fetch-guest's-bookings)
+- [Analytics](#Analytics)
+  - [Retrieve weekly analytics](#Retrieve-weekly-analytics)
+  - [Retrieve detailed analytics report](#Retrieve-detailed-analytics-report)
+  - [Retrieve market analytics](#Retrieve-market-analytics)
+  - [Most booked hotels](#Most-booked-hotels)
 - [Example Project](#example-project)
 
 # Introduction
@@ -49,7 +65,7 @@ LiteAPI opens up a range of powerful functions for travel and hospitality applic
 <br><br>
 <h3 style="font-weight: 500; display:inline">Booking Management:</h3> With LiteAPI, managing bookings becomes a straightforward task. The booking management functions allow for the tracking and management of all bookings made through the app, ensuring users can keep track of their travel plans.
 <br><br>
-<h3 style="font-weight: 500; display:inline">Booking Retrieval and Cancellation:</h3> Lastly, LiteAPI offers the capability to retrieve and cancel existing bookings. This added flexibility is crucial for users who might need to alter their travel plans.
+<h3 style="font-weight: 500; display:inline">Booking Retrieval and Cancellation:</h3> LiteAPI offers the capability to retrieve and cancel existing bookings. This added flexibility is crucial for users who might need to alter their travel plans.
 <br><br>
 All these features make LiteAPI a comprehensive solution for travel app development, offering a plethora of functionalities, from search and booking to management and cancellation. Developers can harness these powerful tools to create high-quality, user-friendly travel applications.
 <br><br>
@@ -57,6 +73,9 @@ All these features make LiteAPI a comprehensive solution for travel app developm
 <br><br>
 <h3 style="font-weight: 500; display:inline">Loyalty Program:</h3> A comprehensive loyalty system within liteAPI, which includes guest tracking, loyalty points accrual, and retrieval of guest booking history and information via a unique guestId.
 <br><br>
+<h3 style="font-weight: 500; display:inline">API: Analytics:</h3>Lastly, LiteAPI allows you to fetch analytics data within a specified date range, including weekly detailed, and market reports. It also retrieves data on the most booked hotels during the specified period.
+<br><br>
+
 
 Don't have an account yet?  Sign Up [Here](https://dashboard.liteapi.travel/register/).
 
@@ -310,6 +329,75 @@ An array of IATA objects with the following properties:
 
 <br>
 
+## Hotel facilities
+
+The API returns the list of hotel facilities available in the system.
+
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
+```js
+    const result = await liteApi.getHotelFacilities();
+```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
+
+An array of facilities with the following properties:
+
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of the hotel facilities.
+<br>
+
+## Hotel types
+
+The API returns a list of available hotel types
+
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
+```js
+    const result = await liteApi.getHotelTypes();
+```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
+
+An array of hotel types with the following properties:
+
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of the hotel types.
+
+<br>
+
+## Hotel chains
+
+The API returns a list of available hotel chains
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
+```js
+    const result = await liteApi.getHotelChains();
+```
+*  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
+
+This function does not need any additional parameters.
+
+*  <h4 style="color:#9155fd; font-weight: 800;"> Return type :</h4>
+
+An array of hotel chains with the following properties:
+
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of the hotel chains.
+
+<br>
 # Booking flow
 
 liteAPI offers a comprehensive and simple way to implement Hotel Booking flow. The booking flow consists of 3 sections: Search, Book, and booking management.
@@ -649,11 +737,11 @@ Name | Type | Description  | Notes
 
 <br>
 
-# Vouchers and Loyalty
+# Vouchers
 
 LiteAPI provides straightforward access to voucher details, including codes and discounts, along with current loyalty program status and cashback rates.
 
-## Vouchers
+## Retrieve vouchers
 
 The `getVouchers` function retrieves a list of all available vouchers. This endpoint provides details such as the voucher code, discount type and value, validity period, and other relevant information.
 
@@ -701,7 +789,118 @@ name | Type | Description
 **status** | **string** | Status of the operation.
 **data**   | **object**  | Details of the specific voucher.
 
+## Create voucher 
+
+Create a new voucher with the specified details, including the voucher code, discount type, value, and validity period. This voucher can then be used by customers.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.CreateVoucher ({voucher_code: "em8d5d7l", 
+                                             discount_type: "percentage", 
+                                             discount_value: 12,
+                                             minimum_spend: 60, 
+                                             maximum_discount_amount: 20, 
+                                             currency: "USD", 
+                                             validity_start: "2024-06-03", 
+                                             validity_end: "2024-07-30", 
+                                             usages_limit: 10, 
+                                             status: "active"});
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name                      | Type         | Description                                                                        | Notes
+------------------------- | ------------ | ---------------------------------------------------------------------------------- | -------------
+**voucherCode**           | **string**   | The unique code for the new voucher.	                                              | [required]
+**discountType**          | **string**   | Type of discount, such as percentage.                                            	| [required]
+**discountValue**         | **number**   | Value of the discount applied by the voucher.	                                    | [required]
+**minimumSpend**          | **number**   | Minimum rate to apply the discount voucher in the voucher currency.              	| [required]
+**maximumDiscountAmount** | **number**   | Maximum discount amount that can be applied using the voucher in voucher currency.	| [required]
+**currency**              | **string**   | Currency in which the discount is offered.                                       	| [required]
+**validityStart**         | **date**     | Date from which the voucher becomes valid.	                                        | [required]
+**validityEnd**           | **date**     | Date until which the voucher remains valid.	                                      | [required]
+**usagesLimit**           | **number**   | Maximum number of times the voucher can be redeemed.	                              | [required]
+**Status**                | **string**   | The unique code for the new voucher.                                             	| [required]
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name        | Type       | Description
+------------|------------|------------
+**message** | **string** | Voucher created successfully.
+
 <br>
+
+## Update Voucher 
+
+Update the details of an existing voucher, including the voucher code, discount value, validity period, and more.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.UpdateVoucher('68',{voucher_code: "em8d5d7l", 
+                                                 discount_type: "percentage", 
+                                                 discount_value: 12,
+                                                 minimum_spend: 60, 
+                                                 maximum_discount_amount: 20, 
+                                                 currency: "USD", 
+                                                 validity_start: "2024-06-03", 
+                                                 validity_end: "2024-07-30", 
+                                                 usages_limit: 10, 
+                                                 status: "active"});
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name                      | Type         | Description                                                                        | Notes
+------------------------- | ------------ | ---------------------------------------------------------------------------------- | -------------
+**id**                    | **number**   | Unique identifier of the voucher to update.	                                      | [required]
+**voucherCode**           | **string**   | The unique code for the new voucher.	                                              | [required]
+**discountType**          | **string**   | Type of discount, such as percentage.                                            	| [required]
+**discountValue**         | **number**   | Value of the discount applied by the voucher.	                                    | [required]
+**minimumSpend**          | **number**   | Minimum rate to apply the discount voucher in the voucher currency.              	| [required]
+**maximumDiscountAmount** | **number**   | Maximum discount amount that can be applied using the voucher in voucher currency.	| [required]
+**currency**              | **string**   | Currency of the discount.                                                        	| [required]
+**validityStart**         | **date**     | Updated start date of the voucher's validity.	                                    | [required]
+**validityEnd**           | **date**     | Updated end date of the voucher's validity.	                                      | [required]
+**usagesLimit**           | **number**   | Updated usage limit for the voucher.                                               | [required]
+**Status**                | **string**   | Updated status of the voucher (e.g., active, inactive).                           	| [required]
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name        | Type       | Description
+------------|------------|------------
+**message** | **string** | Voucher updated successfully.
+
+<br>
+
+## Update Voucher status 
+
+Update the status of a voucher, typically to activate or deactivate it.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.UpdateVoucherStatus('68', {status: "inactive"});
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name                      | Type         | Description                                                              | Notes
+------------------------- | ------------ | ------------------------------------------------------------------------ | -------------
+**id**                    | **number**   | Unique identifier of the voucher for which the status is being updated.  | [required]
+**Status**                | **string**   | New status of the voucher.                                             	| [required]
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name        | Type       | Description
+------------|------------|------------
+**message** | **string** | Voucher status updated successfully.
+
+<br>
+
+# Loyalty
 
 ## Loyalty Program
 
@@ -726,5 +925,226 @@ name | Type | Description
 
 <br>
 
+## Enable loyalty program
+
+Once enable the loyalty program with specified status enabled/disabled and cashback rate (e.g. 0.03 = 3% cashback).
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.EnableLoyalty({status: "disabled", cashbackRate: 0.03 });
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name                      | Type         | Description                                                | Notes
+------------------------- | ------------ | ---------------------------------------------------------- | -------------
+**Status**                | **string**   | Loyalty program status, either enabled or disabled.       	| [required]
+**cashbackRate**          | **float**    | Cashback rate in percentage, e.g. 0.1 = 10%              	| [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of the loyalty program.
+
+<br>
+
+## Update loyalty program
+
+Updates the loyalty program settings, including status and cashback rates.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.UpdateLoyalty({status: "disabled", cashbackRate: 0.03 });
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name                      | Type         | Description                                                | Notes
+------------------------- | ------------ | ---------------------------------------------------------- | -------------
+**Status**                | **string**   | Loyalty program status, either enabled or disabled.       	| [required]
+**cashbackRate**          | **float**    | Cashback rate in percentage, e.g. 0.1 = 10%.             	| [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of the loyalty program.
+
+<br>
+
+## Fetch specific guest
+
+Fetches detailed information about a guest, including personal data, loyalty points, and booking history.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.getGuestsIds(8);
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name                      | Type         | Description                                                | Notes
+------------------------- | ------------ | ---------------------------------------------------------- | -------------
+**guestId**               | **number**   | Numeric ID of the guest to fetch.                        	| [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of specific guest.
+
+<br>
+
+## Fetch guest's bookings
+
+Retrieves a list of all bookings associated with a specific guest, including details about the points earned and cashback applied for each booking.
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.getGuestsBokings(8);
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name                      | Type         | Description                                                | Notes
+------------------------- | ------------ | ---------------------------------------------------------- | -------------
+**guestId**               | **number**   | Numeric ID of the guest to fetch.                        	| [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of guest's bookings.
+
+<br>
+
+# Analytics
+
+## Retrieve weekly analytics
+
+Fetch weekly analytics data for the specified date range.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.RetrieveWeeklyAanalytics( {from: "2024-01-01", to: "2024-01-07"});
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name         | Type       | Description                                                | Notes
+------------ | ---------- | ---------------------------------------------------------- | -------------
+**from**     | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+**to**       | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of weekly analytics.
+
+<br>
+
+## Retrieve detailed analytics report
+
+Fetch a detailed analytics report for the specified date range.
+
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.RetrieveAanalyticsReport( {from: "2024-01-01", to: "2024-01-07"});
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name         | Type       | Description                                                | Notes
+------------ | ---------- | ---------------------------------------------------------- | -------------
+**from**     | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+**to**       | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of analytics report.
+
+<br>
+
+## Retrieve market analytics
+
+Fetch market analytics data for the specified date range.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.RetrieveMarketAanalytics ( {from: "2024-01-01", to: "2024-01-07"});
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name         | Type       | Description                                                | Notes
+------------ | ---------- | ---------------------------------------------------------- | -------------
+**from**     | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+**to**       | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of market analytics.
+
+<br>
+
+## Most booked hotels
+
+Fetch hotel analytics data for most booked hotels the specified date range.
+
+
+* <h4 style="color:#9155fd; font-weight: 800;">Example :</h4>
+
+```js
+const result = await liteApi.RetrieveMostBookedHotels( {from: "2024-01-01", to: "2024-01-07"});
+```
+
+* <h4 style="color:#9155fd; font-weight: 800;">Parameters :</h4>
+
+Name         | Type       | Description                                                | Notes
+------------ | ---------- | ---------------------------------------------------------- | -------------
+**from**     | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+**to**       | **date**   | Start date for the analytics data YYYY-MM-DD (ISO 8601).   | [required]
+
+* <h4 style="color:#9155fd; font-weight: 800;">Return type :</h4>
+
+An object containing the following properties:
+name       | Type       | Description
+-----------|------------|------------
+**status** | **string** | Status of the operation.
+**data**   | **object** | Details of Most booked hotels.
+
+<br>
 # Example Project
 To see an example project demonstrating how to integrate the SDK, visit [liteAPI-nodejs-sdk-examples](https://github.com/liteapi-travel/nodejs-sdk-examples)
