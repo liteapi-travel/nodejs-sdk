@@ -1,12 +1,12 @@
 const sdk = require('../index.js');
 
-const liteApi = sdk('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b9');
+const liteApi = sdk('sand_e7be24f5-f004-484c-9103-f4eba210b58f');
 
 
-// liteApi.getFullRates({ hotelId: ['lp1897'], occupancies: [{ adults: 2, children: [5]}],  currency:'USD', 
-//   checkin: '2024-12-30', guestNationality:'US', checkout: '2024-12-31', countryCode: 'USD'}).then((rates) => {
-//   console.log(rates);
-// });
+liteApi.getFullRates({ hotelId: ['lp1897'], occupancies: [{ adults: 2, children: [5]}],  currency:'USD', 
+  checkin: '2024-12-30', guestNationality:'US', checkout: '2024-12-31', countryCode: 'USD'}).then((rates) => {
+  console.log(rates);
+});
 
 // change the offerID
 liteApi.preBook({offerId:'GE5ESNBSIZKVMQ2QJJNEERSPKIZEMR2OIRKVOVCTKNFVMRCWKNLUWVKKGVDVMRKWGJEEWRSOIVEVCS2PJRFEUVKPK5JVKSKSI5LFKVKTLBFFMSKWKVJEGQSKKZHEMRKSGJFEYRSDIU3FIS2LJRBEIVSLJUZEKSSOJBDEKVSTJBGEUSSWJFJEWTSJJJGFKT2TJJKESUSGKU2FKU2WJE2UKVSTKJBUQSSWIZDEOURSIJDU4S2FI5KFGMSLLJCFMU2NKNKUUVSIIVKVMMSOJNLE4RKJKFFU6S2KJJKU6V2KKNFVER2VGRJEEVKJGVBVMRKWINDEUVSCIZDVEMSSJRDEWRKLKRFTES2GJFDEGV2TIVEUMR2WIVLEWSCJKZHEKSKSGJHEUUJSIUZFMU2ZJFMTGRSNKMZFKS2CJJCVOVSTJBDTKQSWJVJTET2JJZCUMU2UJNKESSSEKVCVCU2ZJRDEOVSFKUZESSKGJZDFCV2LK5FEUSSVK5LVGTSKIJBVIT2RKNJUSNBSIZKVEQ2SJJNEERSDKIZEUR2SINDEOVCLINGEERKFINGTERSKGRNEKV2RGJHEUVSKIZEVIS2OJNFE4RKPKZFVGS2SI5KTEVKTKVEVUS2UI5JEGRSKGVDEMTKVINJUUSSDKUZFMQ2VI5JEIVKTK5FUKSKWJBCUKVKTJBFEMTSFJFJTETSLJJEVKT2RJNNEUQSNKUZFIQSVJJHEKVSTKZBUQSSWJZDEKVKDKJDUUQ2FI5KEWS2LKZCUKQ2VKNLUSVSLIZKVEQ2MJJFEGRKLJZBUUTCKJJKU6UKLGJEVERKVLFJVGU2JGVCVMT2WINDEUWSGIVBVEMSKJRDEGRSLKRFUGS2GGZCESTKKLJDFSM2UIE3UEU2HIFNEISKMJJJEOSKXKRCU4SSBI5EVSRCVJVBFCSCJLFCECN2DKNFDI7BWGI4TK7BSPRWHAMJYHE3XYMRNPRKVGRD4KVJXYMRQGI2C2MJSFUZTA7BSGAZDILJRGIWTGML4PQZC4MBQ'})
@@ -22,7 +22,7 @@ liteApi.book({holder: {
 payment: {
   method: "ACC_CREDIT_CARD"
 },
-prebookId: "vxWyV9fm-", // Replace this with the actual prebook ID
+prebookId: "G8CsAGcQE", 
 guests: [
   {
     occupancyNumber: 1,
@@ -31,7 +31,7 @@ guests: [
     lastName: "Mars",
     email: "s.mars@liteapi.travel"
   }
-]}) .then((book) => {
+]}).then((book) => {
   console.log(book);
 });
 
@@ -91,58 +91,58 @@ liteApi.getIataCodes().then((codes) => {
   console.log(codes);
 });  
 
-liteApi.getGuestsIds(8).then((guests) => { //path parameters
+liteApi.getGuestsIds('7').then((guests) => { //path parameters
   console.log(guests);
 });
 
-liteApi.getGuestsBokings(8).then((guests) => { 
+liteApi.getGuestsBookings('7').then((guests) => { 
   console.log(guests);
 });
 
-liteApi.getVouchers().then((vouchers) => { 
-  console.log(vouchers);
+liteApi.getVouchers().then((response) => {
+  console.log('Vouchers Response:', JSON.stringify(response, null, 2)); 
 });
 
-liteApi.getVoucherById(78).then((vouchers) => {    
+liteApi.getVoucherById('78').then((vouchers) => {    
   console.log(vouchers);
 });  
 
-liteApi.CreateVoucher ({voucher_code: "em8z5d7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"})  .then((voucher) => {    
+liteApi.createVoucher({voucher_code: "em8zpd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
   console.log(voucher);
 });  
 
-liteApi.UpdateVoucher('68', {voucher_code: "em8dyd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
+liteApi.updateVoucher('68', {voucher_code: "em8dyd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
   console.log(voucher);
 }); 
 
-liteApi.UpdateVoucherStatus('68', {status: "inactive"}).then((voucher) => {
+liteApi.updateVoucherStatus('68', {status: "inactive"}).then((voucher) => {
   console.log(voucher);
 });
 
-liteApi.getLoyalty() .then((loyalty) => {    
+liteApi.getLoyalty().then((loyalty) => {    
   console.log(loyalty);
 });
 
-liteApi.EnableLoyalty({status: "disabled", cashbackRate: 0.03 }).then((loyalty) => {    //disabled
+liteApi.enableLoyalty({status: "disabled", cashbackRate: 0.03 }).then((loyalty) => {  
   console.log(loyalty);
 }); 
 
-liteApi.UpdateLoyalty({status: "disabled", cashbackRate: 0.03 }).then((loyalty) => {
+liteApi.updateLoyalty({status: "enable", cashbackRate: 0.03 }).then((loyalty) => {
   console.log(loyalty);
 });
 
-liteApi.RetrieveWeeklyAanalytics( {from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
+liteApi.retrieveWeeklyAanalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
   console.log(analytics);
 });
 
-liteApi.RetrieveAanalyticsReport( {from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
+liteApi.retrieveAnalyticsReport({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
   console.log(analytics);
 });
 
-liteApi.RetrieveMarketAanalytics ( {from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
+liteApi.retrieveMarketAanalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
   console.log(analytics);
 });
 
-liteApi.RetrieveMostBookedHotels( {from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
+liteApi.retrieveMostBookedHotels({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
   console.log(analytics);
 });

@@ -131,14 +131,7 @@ class LiteApi {
      * @returns {object} - The result of the operation.
      */
     async getBookingsList(clientReference) {
-        let errors = [];
-
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
+       
         const options = {
             method: 'GET',
             headers: {
@@ -311,14 +304,7 @@ class LiteApi {
     * @returns {array} - The result of the operation.
     */
     async getCurrencies() {
-        let errors = [];
-
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
+       
         const options = {
             method: 'GET',
             headers: {
@@ -345,14 +331,7 @@ class LiteApi {
     * @returns {array} - The result of the operation.
     */
      async getHotelFacilities() {
-        let errors = [];
 
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
         const options = {
             method: 'GET',
             headers: {
@@ -379,14 +358,7 @@ class LiteApi {
     * @returns {array} - The result of the operation.
     */
      async getHotelTypes() {
-        let errors = [];
-
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
+       
         const options = {
             method: 'GET',
             headers: {
@@ -413,14 +385,7 @@ class LiteApi {
     * @returns {array} - The result of the operation.
     */
      async getHotelChains() {
-        let errors = [];
 
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
         const options = {
             method: 'GET',
             headers: {
@@ -558,14 +523,7 @@ class LiteApi {
     * @returns {array} - The result of the operation.
     */
     async getCountries() {
-        let errors = [];
-
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
+     
         const options = {
             method: 'GET',
             headers: {
@@ -592,14 +550,7 @@ class LiteApi {
      * @returns {array} - The result of the operation.
      */
     async getIataCodes() {
-        let errors = [];
-
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
+       
         const options = {
             method: 'GET',
             headers: {
@@ -629,8 +580,15 @@ class LiteApi {
     */
     async getGuestsIds(guestId) {
         let errors = [];
-        if (guestId == "" || guestId === undefined) {
-            errors.push("The guestId is required");
+        if (typeof guestId !== 'string' || guestId.trim() === "") {
+            errors.push("The guestId is required and must be a non-empty string.");
+        }
+    
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            };
         }
         const options = {
             method: 'GET',
@@ -658,10 +616,17 @@ class LiteApi {
     * @param {string} guestId - Numeric ID of the guest to fetch
     * @returns {array} - The result of the operation.
     */
-     async getGuestsBokings(guestId) {
+     async getGuestsBookings(guestId) {
         let errors = [];
-        if (guestId == "" || guestId === undefined) {
-            errors.push("The guestId is required");
+        if (typeof guestId !== 'string' || guestId.trim() === "") {
+            errors.push("The guestId is required and must be a non-empty string.");
+        }
+    
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            };
         }
         const options = {
             method: 'GET',
@@ -721,8 +686,15 @@ class LiteApi {
      */
     async getVoucherById(voucherID) {
         let errors = [];
-        if (voucherID == "" || voucherID === undefined) {
-            errors.push("The voucherID is required");
+        if (typeof voucherID !== 'string' || voucherID.trim() === "") {
+            errors.push("The voucherID is required and must be a non-empty string.");
+        }
+    
+        if (errors.length > 0) {
+            return {
+                "status": "failed",
+                "errors": errors
+            };
         }
 
         const options = {
@@ -754,7 +726,7 @@ class LiteApi {
      * @param {object} data - The voucher criteria object.
      * @returns {object} - The result of the operation.
      */
-    async CreateVoucher(data) {
+    async createVoucher(data) {
         const options = {
             method: 'POST',
             headers: {
@@ -787,7 +759,7 @@ class LiteApi {
      * @param {string} id - Unique ID of a voucher
      * @returns {object} - The result of the operation.
      */
-    async UpdateVoucher(id, data) {
+    async updateVoucher(id, data) {
         const options = {
             method: 'PUT',
             headers: {
@@ -821,7 +793,7 @@ class LiteApi {
      * @param {string} id - Unique ID of a voucher
      * @returns {object} - The result of the operation.
      */
-    async UpdateVoucherStatus(id, data) {
+    async updateVoucherStatus(id, data) {
         const options = {
             method: 'PUT',
             headers: {
@@ -832,7 +804,6 @@ class LiteApi {
             body: JSON.stringify(data)
         };
 
-        // Update endpoint to use {id}/status in the path
         const response = await fetch(this.dashboardURL + '/vouchers/' + id + '/status', options);
         const result = await response.json();
 
@@ -883,7 +854,7 @@ class LiteApi {
      * @param {object} data - The loyalty criteria object.
      * @returns {object} - The result of the operation.
      */
-     async EnableLoyalty(data) {
+     async enableLoyalty(data) {
         const options = {
             method: 'POST',
             headers: {
@@ -914,7 +885,7 @@ class LiteApi {
      * @param {object} data - The loyalty criteria object.
      * @returns {object} - The result of the operation.
      */
-    async UpdateLoyalty(data) {
+    async updateLoyalty(data) {
         const options = {
             method: 'PUT',
             headers: {
@@ -945,7 +916,7 @@ class LiteApi {
      * @param {object} data - The loyalty analytics object.
      * @returns {object} - The result of the operation.
      */
-    async RetrieveWeeklyAanalytics(data) {
+    async retrieveWeeklyAanalytics(data) {
         const options = {
             method: 'POST',
             headers: {
@@ -976,7 +947,7 @@ class LiteApi {
      * @param {object} data - The loyalty analytics object.
      * @returns {object} - The result of the operation.
      */
-    async RetrieveAanalyticsReport(data) {
+    async retrieveAnalyticsReport(data) {
         const options = {
             method: 'POST',
             headers: {
@@ -1007,7 +978,7 @@ class LiteApi {
      * @param {object} data - The loyalty analytics object.
      * @returns {object} - The result of the operation.
      */
-     async RetrieveMarketAanalytics(data) {
+     async retrieveMarketAanalytics(data) {
         const options = {
             method: 'POST',
             headers: {
@@ -1038,7 +1009,7 @@ class LiteApi {
      * @param {object} data - The loyalty analytics object.
      * @returns {object} - The result of the operation.
      */
-    async RetrieveMostBookedHotels(data) {
+    async retrieveMostBookedHotels(data) {
         const options = {
             method: 'POST',
             headers: {
