@@ -12,7 +12,7 @@ liteApi.getFullRates({
   checkout: '2024-12-31',
   countryCode: 'USD' 
 }).then((rates) => {
-  console.log(rates);
+  console.log('rates:', JSON.stringify(rates, null, 2)); 
 });
 
 // change the offerID
@@ -55,7 +55,7 @@ liteApi.cancelBooking('TaGu19c_H').then((cancel) => {
 });
 
 liteApi.getCitiesByCountryCode({countryCode: 'SG'}).then((cities) => { 
-  console.log(cities);
+  console.log('cities', JSON.stringify(cities, null, 2)); 
 });  
 
 liteApi.getPlaces('Manhattan').then((places) => {
@@ -98,11 +98,11 @@ liteApi.getIataCodes().then((codes) => {
   console.log(codes);
 });  
 
-liteApi.getGuestsIds(7).then((guests) => { //path parameters
+liteApi.getGuestsIds(10).then((guests) => { //path parameters
   console.log(guests);
 });
 
-liteApi.getGuestsBookings(7).then((guests) => { 
+liteApi.getGuestsBookings(10).then((guests) => { 
   console.log(guests);
 });
 
@@ -110,19 +110,19 @@ liteApi.getVouchers().then((response) => {
   console.log('Vouchers Response:', JSON.stringify(response, null, 2)); 
 });
 
-liteApi.getVoucherById(78).then((vouchers) => {    
+liteApi.getVoucherById(80).then((vouchers) => {    
   console.log(vouchers);
 });  
 
-liteApi.createVoucher({voucher_code: "em8zpd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
+liteApi.createVoucher({voucher_code: "em1zpd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
   console.log(voucher);
 });  
 
-liteApi.updateVoucher('68', {voucher_code: "em8dyd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
+liteApi.updateVoucher('80', {voucher_code: "em8kyd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
   console.log(voucher);
 }); 
 
-liteApi.updateVoucherStatus('68', {status: "inactive"}).then((voucher) => {
+liteApi.updateVoucherStatus('80', {status: "inactive"}).then((voucher) => {
   console.log(voucher);
 });
 
@@ -139,15 +139,15 @@ liteApi.updateLoyalty({status: "enable", cashbackRate: 0.03 }).then((loyalty) =>
 });
 
 liteApi.retrieveWeeklyAnalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
-  console.log(analytics);
+  console.log('retrieveWeeklyAnalytics:', JSON.stringify(analytics, null, 2)); 
 });
 
 liteApi.retrieveAnalyticsReport({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
-  console.log(analytics);
+  console.log('retrieveAnalyticsReport:', JSON.stringify(analytics, null, 2)); 
 });
 
 liteApi.retrieveMarketAnalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
-  console.log(analytics);
+  console.log('retrieveMarketAnalytics:', JSON.stringify(analytics, null, 2)); 
 });
 
 liteApi.retrieveMostBookedHotels({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
