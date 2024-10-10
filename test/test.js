@@ -1,8 +1,8 @@
 const expect = require('expect.js');
-const liteApi = require('../index.js')('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b9'); // Replace 'YOUR_API_KEY' with your actual API key
+const liteApi = require('../index.js')('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b9'); 
 
 describe('LiteAPI SDK Test Suite', function() {
-  this.timeout(20000); // Set global timeout for all tests
+  this.timeout(20000); 
 
   it('should retrieve full rates', async function() {
     const data = {
@@ -42,7 +42,7 @@ describe('LiteAPI SDK Test Suite', function() {
       payment: {
         method: 'ACC_CREDIT_CARD',
       },
-      prebookId: '6-xUGK8_C', // Replace with actual prebookId
+      prebookId: '6-xUGK8_C', 
       guests: [
         {
           occupancyNumber: 1,
@@ -68,14 +68,14 @@ describe('LiteAPI SDK Test Suite', function() {
   });
 
   it('should retrieve a specific booking', async function() {
-    const result = await liteApi.retrieveBooking('XE1Bxh1bS'); // Replace with actual booking ID
+    const result = await liteApi.retrieveBooking('XE1Bxh1bS'); 
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
   });
 
   it('should cancel a booking', async function() {
-    const result = await liteApi.cancelBooking('2iurjZrDN'); // Replace with actual booking ID
+    const result = await liteApi.cancelBooking('2iurjZrDN'); 
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
@@ -168,7 +168,6 @@ describe('LiteAPI SDK Test Suite', function() {
   it('should retrieve vouchers', async function () {
     const result = await liteApi.getVouchers();
   
-    // Check if vouchers exist in the data property
     expect(result).to.have.property('status', 'success');
     expect(result.data).to.have.property('vouchers');
     expect(result.data.vouchers).to.be.an('array');
@@ -257,16 +256,14 @@ describe('LiteAPI SDK Test Suite', function() {
   it('should retrieve weekly analytics', async function () {
     const result = await liteApi.retrieveWeeklyAnalytics({ from: '2024-01-01', to: '2024-01-07' });
   
-    // Check if data contains the expected array inside
     expect(result).to.have.property('status', 'success');
-    expect(result.data).to.have.property('arr'); // Assuming 'arr' is the correct property name
+    expect(result.data).to.have.property('arr'); 
     expect(result.data.arr).to.be.an('array');
   });
 
   it('should retrieve analytics report', async function () {
     const result = await liteApi.retrieveAnalyticsReport({ from: '2024-01-01', to: '2024-01-07' });
   
-    // Check for the correct structure of the analytics report
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.have.property('totalRevenue');
