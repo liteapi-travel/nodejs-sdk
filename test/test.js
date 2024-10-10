@@ -1,10 +1,17 @@
 const sdk = require('../index.js');
 
-const liteApi = sdk('sand_e7be24f5-f004-484c-9103-f4eba210b58f');
+const liteApi = sdk('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b9');
 
 
-liteApi.getFullRates({ hotelId: ['lp1897'], occupancies: [{ adults: 2, children: [5]}],  currency:'USD', 
-  checkin: '2024-12-30', guestNationality:'US', checkout: '2024-12-31', countryCode: 'USD'}).then((rates) => {
+liteApi.getFullRates({
+  hotelIds: ['lp1897'],
+  occupancies: [{ adults: 2, children: [5] }], 
+  currency: 'USD',
+  guestNationality: 'US',
+  checkin: '2024-12-30',
+  checkout: '2024-12-31',
+  countryCode: 'USD' 
+}).then((rates) => {
   console.log(rates);
 });
 
@@ -79,7 +86,7 @@ liteApi.getHotelDetails('lp1897').then((details) => {
   console.log(details);
 });
 
-liteApi.getHotelReviews('lp1897').then((reviews) => {
+liteApi.getHotelReviews('lp1897', getSentiment=true).then((reviews) => {
   console.log(reviews);
 });
 
@@ -91,11 +98,11 @@ liteApi.getIataCodes().then((codes) => {
   console.log(codes);
 });  
 
-liteApi.getGuestsIds('7').then((guests) => { //path parameters
+liteApi.getGuestsIds(7).then((guests) => { //path parameters
   console.log(guests);
 });
 
-liteApi.getGuestsBookings('7').then((guests) => { 
+liteApi.getGuestsBookings(7).then((guests) => { 
   console.log(guests);
 });
 
@@ -103,7 +110,7 @@ liteApi.getVouchers().then((response) => {
   console.log('Vouchers Response:', JSON.stringify(response, null, 2)); 
 });
 
-liteApi.getVoucherById('78').then((vouchers) => {    
+liteApi.getVoucherById(78).then((vouchers) => {    
   console.log(vouchers);
 });  
 
@@ -131,7 +138,7 @@ liteApi.updateLoyalty({status: "enable", cashbackRate: 0.03 }).then((loyalty) =>
   console.log(loyalty);
 });
 
-liteApi.retrieveWeeklyAanalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
+liteApi.retrieveWeeklyAnalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
   console.log(analytics);
 });
 
@@ -139,7 +146,7 @@ liteApi.retrieveAnalyticsReport({from: "2024-01-01", to: "2024-01-07"}).then((an
   console.log(analytics);
 });
 
-liteApi.retrieveMarketAanalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
+liteApi.retrieveMarketAnalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
   console.log(analytics);
 });
 

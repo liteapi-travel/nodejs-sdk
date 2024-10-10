@@ -11,7 +11,6 @@ class LiteApi {
     The API also has a built in loyalty rewards system. The system rewards return users who have made prior bookings.
     If the search is coming from a known guest ID, the guest level is also returned along with the pricing that's appropriate for the guest level.
     If it is a new user, the guest ID will be generated at the time of the first confirmed booking.
-     *
      * @param {object} data - The search criteria object.
      * @returns {object} - The result of the operation.
      */
@@ -127,7 +126,7 @@ class LiteApi {
     }
     /**
      * The API returns the list of booking Id's for a given guest Id.
-     * @param {string} clientReference - The request timeout value in seconds (default: 1.5).
+     * @param {string} clientReference - required guestId or clientReference
      * @returns {object} - The result of the operation.
      */
     async getBookingsList(clientReference) {
@@ -240,12 +239,6 @@ class LiteApi {
             errors.push("The country code is required");
         }
 
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
         const options = {
             method: 'GET',
             headers: {
@@ -450,12 +443,6 @@ class LiteApi {
             errors.push("The Hotel code is required");
         }
 
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
         const options = {
             method: 'GET',
             headers: {
@@ -481,9 +468,10 @@ class LiteApi {
     * Retrieves a list of reviews for a specific hotel identified by hotelId
     * @param {string} hotelId - Unique ID of a hotel
     * @param {number} limit - limit number of reviews (max 1000)
+    * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
     * @returns {array} - The reviews of the hotel
     */
-    async getHotelReviews(hotelId, limit) {
+    async getHotelReviews(hotelId, limit, getSentiment) {
         let errors = [];
         if (hotelId == "" || hotelId === undefined) {
             errors.push("The Hotel code is required");
@@ -504,7 +492,7 @@ class LiteApi {
             },
         };
 
-        const response = await fetch(`${this.serviceURL}/data/reviews?hotelId=${hotelId}&limit=${limit}&timeout=5`, options);
+        const response = await fetch(`${this.serviceURL}/data/reviews?hotelId=${hotelId}&limit=${limit}&timeout=5&getSentiment=${getSentiment}`, options);
         const data = await response.json();
 
         if (!response.ok) {
@@ -580,16 +568,11 @@ class LiteApi {
     */
     async getGuestsIds(guestId) {
         let errors = [];
-        if (typeof guestId !== 'string' || guestId.trim() === "") {
-            errors.push("The guestId is required and must be a non-empty string.");
+
+        if (!guestId) {
+            errors.push("The guestId is required.");
         }
-    
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            };
-        }
+
         const options = {
             method: 'GET',
             headers: {
@@ -618,16 +601,11 @@ class LiteApi {
     */
      async getGuestsBookings(guestId) {
         let errors = [];
-        if (typeof guestId !== 'string' || guestId.trim() === "") {
-            errors.push("The guestId is required and must be a non-empty string.");
+        
+        if (!guestId) {
+            errors.push("The guestId is required.");
         }
-    
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            };
-        }
+
         const options = {
             method: 'GET',
             headers: {
@@ -686,17 +664,11 @@ class LiteApi {
      */
     async getVoucherById(voucherID) {
         let errors = [];
-        if (typeof voucherID !== 'string' || voucherID.trim() === "") {
-            errors.push("The voucherID is required and must be a non-empty string.");
+
+        if (!voucherID) {
+            errors.push("The voucherID is required.");
         }
     
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            };
-        }
-
         const options = {
             method: 'GET',
             headers: {
@@ -916,7 +888,7 @@ class LiteApi {
      * @param {object} data - The loyalty analytics object.
      * @returns {object} - The result of the operation.
      */
-    async retrieveWeeklyAanalytics(data) {
+    async retrieveWeeklyAnalytics(data) {
         const options = {
             method: 'POST',
             headers: {
@@ -978,7 +950,7 @@ class LiteApi {
      * @param {object} data - The loyalty analytics object.
      * @returns {object} - The result of the operation.
      */
-     async retrieveMarketAanalytics(data) {
+     async retrieveMarketAnalytics(data) {
         const options = {
             method: 'POST',
             headers: {
