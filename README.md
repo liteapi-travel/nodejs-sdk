@@ -291,14 +291,15 @@ The getHotelReviews function returns a list of reviews for a specific hotel iden
 *  <h4 style="color:#9155fd; font-weight: 800;"> Example :</h4>
 
 ```js
-    const result = await liteApi.getHotelReviews("lp24373", 200);
+    const result = await liteApi.getHotelReviews("lp24373", 200, true);
 ```
 
 *  <h4 style="color:#9155fd; font-weight: 800;"> Parameters :</h4>
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **hotelId** | **string**| Unique ID of a hotel | [required]
- **limit** | **number**| Number of reviews to retrieve | [required]
+Name                 | Type          | Description                                                                | Notes
+-------------------- | ------------- | -------------------------------------------------------------------------- | -------------
+ **hotelId**         | **string**    | Unique ID of a hotel                                                       | [required]
+ **limit**           | **number**    | Number of reviews to retrieve                                              | [required]
+ **getSentiment**    | **boolean**   | If set to true, the sentiment analysis of the review text will be returned | [required]
 
 <br>
 
