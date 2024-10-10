@@ -1,154 +1,291 @@
-const sdk = require('../index.js');
+const expect = require('expect.js');
+const liteApi = require('../index.js')('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b9'); // Replace 'YOUR_API_KEY' with your actual API key
 
-const liteApi = sdk('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b9');
+describe('LiteAPI SDK Test Suite', function() {
+  this.timeout(20000); // Set global timeout for all tests
 
+  it('should retrieve full rates', async function() {
+    const data = {
+      hotelIds: ['lp1897'],
+      occupancies: [{ adults: 2, children: [5] }],
+      currency: 'USD',
+      guestNationality: 'US',
+      checkin: '2024-12-30',
+      checkout: '2024-12-31',
+      countryCode: 'USD',
+    };
 
-liteApi.getFullRates({
-  hotelIds: ['lp1897'],
-  occupancies: [{ adults: 2, children: [5] }], 
-  currency: 'USD',
-  guestNationality: 'US',
-  checkin: '2024-12-30',
-  checkout: '2024-12-31',
-  countryCode: 'USD' 
-}).then((rates) => {
-  console.log('rates:', JSON.stringify(rates, null, 2)); 
-});
+    const result = await liteApi.getFullRates(data);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.preBook({offerId:'GE5ESNBSIZKVMQ2QJJNEERSPKIZEMR2OIRKVOVCTKNFVMRCWKNLUWVKKGVDVMRKWGJEEWRSOIVEVCS2PJRFEUVKPK5JVKSKSI5LFKVKTLBFFMSKWKVJEGQSKKZHEMRKSGJFEYRSDIU3FIS2LJRBEIVSLJUZEKSSOJBDEKVSTJBGEUSSWJFJEWTSJJJGFKT2TJJKESUSGKU2FKU2WJE2UKVSTKJBUQSSWIZDEOURSIJDU4S2FI5KFGMSLLJCFMU2NKNKUUVSIIVKVMMSOJNLE4RKJKFFU6S2KJJKU6V2KKNFVER2VGRJEEVKJGVBVMRKWINDEUVSCIZDVEMSSJRDEWRKLKRFTES2GJFDEGV2TIVEUMR2WIVLEWSCJKZHEKSKSGJHEUUJSIUZFMU2ZJFMTGRSNKMZFKS2CJJCVOVSTJBDTKQSWJVJTET2JJZCUMU2UJNKESSSEKVCVCU2ZJRDEOVSFKUZESSKGJZDFCV2LK5FEUSSVK5LVGTSKIJBVIT2RKNJUSNBSIZKVEQ2SJJNEERSDKIZEUR2SINDEOVCLINGEERKFINGTERSKGRNEKV2RGJHEUVSKIZEVIS2OJNFE4RKPKZFVGS2SI5KTEVKTKVEVUS2UI5JEGRSKGVDEMTKVINJUUSSDKUZFMQ2VI5JEIVKTK5FUKSKWJBCUKVKTJBFEMTSFJFJTETSLJJEVKT2RJNNEUQSNKUZFIQSVJJHEKVSTKZBUQSSWJZDEKVKDKJDUUQ2FI5KEWS2LKZCUKQ2VKNLUSVSLIZKVEQ2MJJFEGRKLJZBUUTCKJJKU6UKLGJEVERKVLFJVGU2JGVCVMT2WINDEUWSGIVBVEMSKJRDEGRSLKRFUGS2GGZCESTKKLJDFSM2UIE3UEU2HIFNEISKMJJJEOSKXKRCU4SSBI5EVSRCVJVBFCSCJLFCECN2DKNFDI7BWGI4TK7BSPRWHAMJYHE3XYMRNPRKVGRD4KVJXYMRQGI2C2MJSFUZTA7BSGAZDILJRGIWTGML4PQZC4MBQ'})
- .then((preBook) => {
-  console.log(preBook);
-});  
+  it('should prebook an offer', async function() {
+    const data = {
+      offerId: 'GE5ESNBSIZKVMQ2QJJNEERSPKIZEMR2OIRKVOVCTKNFVMRCWKNLUWVKKGVDVMRKWGJEEWRSOIVEVCS2PJRFEUVKPK5JVKSKSI5LFKVKTLBFFMSKWKVJEGQSKKZHEMRKSGJFEYRSDIU3FIS2LJRBEIVSLJUZEKSSOJBDEKVSTJBGEUSSWJFJEWTSJJJGFKT2TJJKESUSGKU2FKU2WJE2UKVSTKJBUQSSWIZDEOURSIJDU4S2FI5KFGMSLLJCFMU2NKNKUUVSIIVKVMMSOJNLE4RKJKFFU6S2KJJKU6V2KKNFVER2VGRJEEVKJGVBVMRKWINDEUVSCIZDVEMSSJRDEWRKLKRFTES2GJFDEGV2TIVEUMR2WIVLEWSCJKZHEKSKSGJHEUUJSIUZFMU2ZJFMTGRSNKMZFKS2CJJCVOVSTJBDTKQSWJVJTET2JJZCUMU2UJNKESSSEKVCVCU2ZJRDEOVSFKUZESSKGJZDFCV2LK5FEUSSVK5LVGTSKIJBVIT2RKNJUSNBSIZKVEQ2SJJNEMRSPKNBUMR2OINCU6VCTJNFTKRCVJNLUWVSLGRNFKR2XKNGEURSKIZEVIS2OJNFE4RKPKZFVGS2SI5KTEVKTKVEVUS2UI5JEGRSKGVDEMTKVINJUUSSDKUZFMQ2VI5JEIVKTK5FUKSKWJBCUKVKTJBFEMTSFJFJTETSLJJEVKT2RJNNEUQSNKUZFIQSVJJDEQRCNKJJUMSSWIZDEWURSJJGEMTKGKNKFGQ2LJJCFKS2NKNCUWRSFKRCVKMSLI5JEURSNKJFVGS2OJBKUWVCLGJEVEQKVGJKVGVSJLJFVMU2WINDEUUSGIZDVEMSWJNDEGRKLKRFUGR2KIRKUGV2LIJIFCMSEI5HFET2HIUZUQWKNKJIUOSJSIMZE2SSTIZKVURCLJFBFGR2BGVCECTKCGJDUCWKILFKVGUD4GYZDSNL4GJ6GY4BRHA4TO7BSFV6FKU2EPRKVG7BSGAZDILJRGIWTGMD4GIYDENBNGEZC2MZRPR6DMLRQGA', // Replace with actual offerId
+    };
 
-liteApi.book({holder: {
-  firstName: "Steve",
-  lastName: "Doe",
-  email: "s.doe@liteapi.travel"
-},
-payment: {
-  method: "ACC_CREDIT_CARD"
-},
-prebookId: "G8CsAGcQE", 
-guests: [
-  {
-    occupancyNumber: 1,
-    remarks: "quiet room please",
-    firstName: "Sunny",
-    lastName: "Mars",
-    email: "s.mars@liteapi.travel"
-  }
-]}).then((book) => {
-  console.log(book);
-});
+    const result = await liteApi.preBook(data);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.getBookingsList({clientReference: 'testref'}).then((bookings) => { //query parameters
-  console.log(bookings);
-});
+  it('should book a hotel room', async function() {
+    const data = {
+      holder: {
+        firstName: 'Steve',
+        lastName: 'Doe',
+        email: 's.doe@liteapi.travel',
+      },
+      payment: {
+        method: 'ACC_CREDIT_CARD',
+      },
+      prebookId: '6-xUGK8_C', // Replace with actual prebookId
+      guests: [
+        {
+          occupancyNumber: 1,
+          remarks: 'quiet room please',
+          firstName: 'Sunny',
+          lastName: 'Mars',
+          email: 's.mars@liteapi.travel',
+        },
+      ],
+    };
 
-liteApi.retrieveBooking('TaGu19c_H').then((booking) => {  //path parameters
-  console.log(booking);
-});  
+    const result = await liteApi.book(data);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.cancelBooking('TaGu19c_H').then((cancel) => { 
-  console.log(cancel);
-});
+  it('should retrieve booking list', async function() {
+    const result = await liteApi.getBookingsList('testref');
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getCitiesByCountryCode({countryCode: 'SG'}).then((cities) => { 
-  console.log('cities', JSON.stringify(cities, null, 2)); 
-});  
+  it('should retrieve a specific booking', async function() {
+    const result = await liteApi.retrieveBooking('XE1Bxh1bS'); // Replace with actual booking ID
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.getPlaces('Manhattan').then((places) => {
-  console.log(places);
-});
+  it('should cancel a booking', async function() {
+    const result = await liteApi.cancelBooking('2iurjZrDN'); // Replace with actual booking ID
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.getCurrencies().then((currencies) => {
-  console.log(currencies);
-});
+  it('should retrieve cities by country code', async function() {
+    const result = await liteApi.getCitiesByCountryCode('SG');
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getHotelFacilities().then((facilities) => {          
-  console.log(facilities);
-});
+  it('should retrieve available currencies', async function() {
+    const result = await liteApi.getCurrencies();
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getHotelTypes().then((types) => { 
-  console.log(types);
-});
+  it('should retrieve hotel facilities', async function() {
+    const result = await liteApi.getHotelFacilities();
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getHotelChains().then((chains) => {
-  console.log(chains);
-});
+  it('should retrieve hotel types', async function() {
+    const result = await liteApi.getHotelTypes();
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getHotels({ countryCode: 'IT', cityName: 'Rome' }).then((hotels) => {
-  console.log(hotels);
-});
+  it('should retrieve hotel chains', async function() {
+    const result = await liteApi.getHotelChains();
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getHotelDetails('lp1897').then((details) => {
-  console.log(details);
-});
+  it('should retrieve hotels by country and city', async function() {
+    const result = await liteApi.getHotels({ countryCode: 'IT', cityName: 'Rome' });
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getHotelReviews('lp1897',true).then((reviews) => {
-  console.log(reviews);
-});
+  it('should retrieve hotel details by ID', async function() {
+    const result = await liteApi.getHotelDetails('lp1897');
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.getCountries().then((countries) => {
-  console.log(countries);
-});
+  it('should retrieve hotel reviews by ID', async function() {
+    const result = await liteApi.getHotelReviews('lp1897', 5, true);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getIataCodes().then((codes) => { 
-  console.log(codes);
-});  
+  it('should retrieve available countries', async function() {
+    const result = await liteApi.getCountries();
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getGuestsIds(10).then((guests) => { //path parameters
-  console.log(guests);
-});
+  it('should retrieve IATA codes', async function() {
+    const result = await liteApi.getIataCodes();
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getGuestsBookings(10).then((guests) => { 
-  console.log(guests);
-});
+  it('should retrieve guest IDs', async function() {
+    const result = await liteApi.getGuestsIds(10);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.getVouchers().then((response) => {
-  console.log('Vouchers Response:', JSON.stringify(response, null, 2)); 
-});
+  it('should retrieve guest bookings', async function() {
+    const result = await liteApi.getGuestsBookings(10);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 
-liteApi.getVoucherById(80).then((vouchers) => {    
-  console.log(vouchers);
-});  
+  it('should retrieve vouchers', async function () {
+    const result = await liteApi.getVouchers();
+  
+    // Check if vouchers exist in the data property
+    expect(result).to.have.property('status', 'success');
+    expect(result.data).to.have.property('vouchers');
+    expect(result.data.vouchers).to.be.an('array');
+  });
 
-liteApi.createVoucher({voucher_code: "em1zpd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
-  console.log(voucher);
-});  
+  it('should retrieve a specific voucher by ID', async function() {
+    const result = await liteApi.getVoucherById(80);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.updateVoucher('80', {voucher_code: "em8kyd7l", discount_type: "percentage", discount_value: 12, minimum_spend: 60, maximum_discount_amount: 20, currency: "USD", validity_start: "2024-06-03", validity_end: "2024-07-30", usages_limit: 10, status: "active"}).then((voucher) => {    
-  console.log(voucher);
-}); 
+  it('should create a new voucher', async function() {
+    const data = {
+      voucher_code: 'em4z7z7l',
+      discount_type: 'percentage',
+      discount_value: 12,
+      minimum_spend: 60,
+      maximum_discount_amount: 20,
+      currency: 'USD',
+      validity_start: '2024-06-03',
+      validity_end: '2024-07-30',
+      usages_limit: 10,
+      status: 'active',
+    };
 
-liteApi.updateVoucherStatus('80', {status: "inactive"}).then((voucher) => {
-  console.log(voucher);
-});
+    const result = await liteApi.createVoucher(data);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.getLoyalty().then((loyalty) => {    
-  console.log(loyalty);
-});
+  it('should update an existing voucher', async function() {
+    const data = {
+      voucher_code: 'em8kyd7l',
+      discount_type: 'percentage',
+      discount_value: 12,
+      minimum_spend: 60,
+      maximum_discount_amount: 20,
+      currency: 'USD',
+      validity_start: '2024-06-03',
+      validity_end: '2024-07-30',
+      usages_limit: 10,
+      status: 'active',
+    };
 
-liteApi.enableLoyalty({status: "disabled", cashbackRate: 0.03 }).then((loyalty) => {  
-  console.log(loyalty);
-}); 
+    const result = await liteApi.updateVoucher(80, data);
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.updateLoyalty({status: "enable", cashbackRate: 0.03 }).then((loyalty) => {
-  console.log(loyalty);
-});
+  it('should update the status of a voucher', async function() {
+    const result = await liteApi.updateVoucherStatus(80, { status: 'inactive' });
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.retrieveWeeklyAnalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
-  console.log('retrieveWeeklyAnalytics:', JSON.stringify(analytics, null, 2)); 
-});
+  it('should retrieve loyalty information', async function() {
+    const result = await liteApi.getLoyalty();
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.retrieveAnalyticsReport({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
-  console.log('retrieveAnalyticsReport:', JSON.stringify(analytics, null, 2)); 
-});
+  it('should enable loyalty', async function () {
+    const result = await liteApi.enableLoyalty({ status: 'enabled', cashbackRate: 0.03 });
+  
+    if (result.status === 'failed' && result.error.message === 'loyalty already created') {
+      expect(result.error).to.have.property('message', 'loyalty already created');
+    } else {
+      expect(result).to.have.property('status', 'success');
+      expect(result).to.have.property('data');
+      expect(result.data).to.be.an('object');
+    }
+  });
 
-liteApi.retrieveMarketAnalytics({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
-  console.log('retrieveMarketAnalytics:', JSON.stringify(analytics, null, 2)); 
-});
+  it('should update loyalty', async function() {
+    const result = await liteApi.updateLoyalty({ status: 'enable', cashbackRate: 0.03 });
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('object');
+  });
 
-liteApi.retrieveMostBookedHotels({from: "2024-01-01", to: "2024-01-07"}).then((analytics) => {
-  console.log(analytics);
+  it('should retrieve weekly analytics', async function () {
+    const result = await liteApi.retrieveWeeklyAnalytics({ from: '2024-01-01', to: '2024-01-07' });
+  
+    // Check if data contains the expected array inside
+    expect(result).to.have.property('status', 'success');
+    expect(result.data).to.have.property('arr'); // Assuming 'arr' is the correct property name
+    expect(result.data.arr).to.be.an('array');
+  });
+
+  it('should retrieve analytics report', async function () {
+    const result = await liteApi.retrieveAnalyticsReport({ from: '2024-01-01', to: '2024-01-07' });
+  
+    // Check for the correct structure of the analytics report
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.have.property('totalRevenue');
+    expect(result.data.totalRevenue).to.be.a('number');
+    expect(result.data).to.have.property('salesRevenue').that.is.an('array');
+    expect(result.data.salesRevenue).to.not.be.empty;
+  });
+
+  it('should retrieve market analytics', async function() {
+    const result = await liteApi.retrieveMarketAnalytics({ from: '2024-01-01', to: '2024-01-07' });
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
+
+  it('should retrieve most booked hotels', async function() {
+    const result = await liteApi.retrieveMostBookedHotels({ from: '2024-01-01', to: '2024-01-07' });
+    expect(result).to.have.property('status', 'success');
+    expect(result).to.have.property('data');
+    expect(result.data).to.be.an('array');
+  });
 });
