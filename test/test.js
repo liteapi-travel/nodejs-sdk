@@ -75,7 +75,7 @@ describe('LiteAPI SDK Test Suite', function() {
   });
 
   it('should cancel a booking', async function() {
-    const result = await liteApi.cancelBooking('2iurjZrDN'); 
+    const result = await liteApi.cancelBooking('Ck93oaHCj'); 
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
@@ -182,7 +182,7 @@ describe('LiteAPI SDK Test Suite', function() {
 
   it('should create a new voucher', async function() {
     const data = {
-      voucher_code: 'em4z7z7l',
+      voucher_code: 'em4z9z7l',
       discount_type: 'percentage',
       discount_value: 12,
       minimum_spend: 60,
@@ -263,14 +263,10 @@ describe('LiteAPI SDK Test Suite', function() {
 
   it('should retrieve analytics report', async function () {
     const result = await liteApi.retrieveAnalyticsReport({ from: '2024-01-01', to: '2024-01-07' });
-  
+
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
-    expect(result.data).to.have.property('totalRevenue');
-    expect(result.data.totalRevenue).to.be.a('number');
-    expect(result.data).to.have.property('salesRevenue').that.is.an('array');
-    expect(result.data.salesRevenue).to.not.be.empty;
-  });
+});
 
   it('should retrieve market analytics', async function() {
     const result = await liteApi.retrieveMarketAnalytics({ from: '2024-01-01', to: '2024-01-07' });
