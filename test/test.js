@@ -180,9 +180,13 @@ describe('LiteAPI SDK Test Suite', function() {
     expect(result.data).to.be.an('object');
   });
 
+  // Function to generate or retrieve the voucher code dynamically
+  function getVoucherCode() {
+  return 'VOUCHER_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+}
   it('should create a new voucher', async function() {
     const data = {
-      voucher_code: 'be49z8l',
+      voucher_code: getVoucherCode(),
       discount_type: 'percentage',
       discount_value: 12,
       minimum_spend: 60,
