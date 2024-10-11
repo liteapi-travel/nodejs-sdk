@@ -3,6 +3,10 @@ const liteApi = require('../index.js')('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b
 
 describe('LiteAPI SDK Test Suite', function() {
   this.timeout(20000); 
+   // Function to generate or retrieve the voucher code dynamically
+   function getVoucherCode() {
+    return 'VOUCHER_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+   } 
 
   it('should retrieve full rates', async function() {
     const data = {
@@ -180,10 +184,6 @@ describe('LiteAPI SDK Test Suite', function() {
     expect(result.data).to.be.an('object');
   });
 
-  // Function to generate or retrieve the voucher code dynamically
-  function getVoucherCode() {
-  return 'VOUCHER_' + Math.random().toString(36).substr(2, 9).toUpperCase();
-}
   it('should create a new voucher', async function() {
     const data = {
       voucher_code: getVoucherCode(),
