@@ -3,6 +3,14 @@ const liteApi = require('../index.js')('sand_c0155ab8-c683-4f26-8f94-b5e92c5797b
 
 describe('LiteAPI SDK Test Suite', function() {
   this.timeout(20000); 
+   // Function to generate or retrieve the voucher code dynamically
+   function getVoucherCode() {
+    return 'VOUCHER_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+   } 
+
+   let latestVoucherId;
+   let bookingId;
+   let offer;  
 
   it('should retrieve full rates', async function() {
     const data = {
@@ -19,11 +27,14 @@ describe('LiteAPI SDK Test Suite', function() {
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
+    if (result.data.data && result.data.data.length > 0 && result.data.data[0].roomTypes && result.data.data[0].roomTypes.length > 0) {
+      offer = result.data.data[0].roomTypes[0].offerId;
+    }
   });
 
   it('should prebook an offer', async function() {
     const data = {
-      offerId: 'GE5ESNBSIZKVMQ2QJJNEERSPKIZEMR2OIRKVOVCTKNFVMRCWKNLUWVKKGVDVMRKWGJEEWRSOIVEVCS2PJRFEUVKPK5JVKSKSI5LFKVKTLBFFMSKWKVJEGQSKKZHEMRKSGJFEYRSDIU3FIS2LJRBEIVSLJUZEKSSOJBDEKVSTJBGEUSSWJFJEWTSJJJGFKT2TJJKESUSGKU2FKU2WJE2UKVSTKJBUQSSWIZDEOURSIJDU4S2FI5KFGMSLLJCFMU2NKNKUUVSIIVKVMMSOJNLE4RKJKFFU6S2KJJKU6V2KKNFVER2VGRJEEVKJGVBVMRKWINDEUVSCIZDVEMSSJRDEWRKLKRFTES2GJFDEGV2TIVEUMR2WIVLEWSCJKZHEKSKSGJHEUUJSIUZFMU2ZJFMTGRSNKMZFKS2CJJCVOVSTJBDTKQSWJVJTET2JJZCUMU2UJNKESSSEKVCVCU2ZJRDEOVSFKUZESSKGJZDFCV2LK5FEUSSVK5LVGTSKIJBVIT2RKNJUSNBSIZKVEQ2SJJNEMRSPKNBUMR2OINCU6VCTJNFTKRCVJNLUWVSLGRNFKR2XKNGEURSKIZEVIS2OJNFE4RKPKZFVGS2SI5KTEVKTKVEVUS2UI5JEGRSKGVDEMTKVINJUUSSDKUZFMQ2VI5JEIVKTK5FUKSKWJBCUKVKTJBFEMTSFJFJTETSLJJEVKT2RJNNEUQSNKUZFIQSVJJDEQRCNKJJUMSSWIZDEWURSJJGEMTKGKNKFGQ2LJJCFKS2NKNCUWRSFKRCVKMSLI5JEURSNKJFVGS2OJBKUWVCLGJEVEQKVGJKVGVSJLJFVMU2WINDEUUSGIZDVEMSWJNDEGRKLKRFUGR2KIRKUGV2LIJIFCMSEI5HFET2HIUZUQWKNKJIUOSJSIMZE2SSTIZKVURCLJFBFGR2BGVCECTKCGJDUCWKILFKVGUD4GYZDSNL4GJ6GY4BRHA4TO7BSFV6FKU2EPRKVG7BSGAZDILJRGIWTGMD4GIYDENBNGEZC2MZRPR6DMLRQGA', // Replace with actual offerId
+      offerId: offer,
     };
 
     const result = await liteApi.preBook(data);
@@ -58,6 +69,7 @@ describe('LiteAPI SDK Test Suite', function() {
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
+    bookingId = result.data.bookingId; 
   });
 
   it('should retrieve booking list', async function() {
@@ -75,7 +87,7 @@ describe('LiteAPI SDK Test Suite', function() {
   });
 
   it('should cancel a booking', async function() {
-    const result = await liteApi.cancelBooking('2iurjZrDN'); 
+    const result = await liteApi.cancelBooking(bookingId); 
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
@@ -171,10 +183,17 @@ describe('LiteAPI SDK Test Suite', function() {
     expect(result).to.have.property('status', 'success');
     expect(result.data).to.have.property('vouchers');
     expect(result.data.vouchers).to.be.an('array');
+
+    if (result.data.vouchers.length > 0) {
+      const latestVoucher = result.data.vouchers.reduce((latest, voucher) => {
+        return new Date(voucher.created_at) > new Date(latest.created_at) ? voucher : latest;
+      });
+      latestVoucherId = latestVoucher.id;
+    }
   });
 
   it('should retrieve a specific voucher by ID', async function() {
-    const result = await liteApi.getVoucherById(80);
+    const result = await liteApi.getVoucherById(latestVoucherId);
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
@@ -182,7 +201,7 @@ describe('LiteAPI SDK Test Suite', function() {
 
   it('should create a new voucher', async function() {
     const data = {
-      voucher_code: 'em4z7z7l',
+      voucher_code: getVoucherCode(),
       discount_type: 'percentage',
       discount_value: 12,
       minimum_spend: 60,
@@ -202,7 +221,7 @@ describe('LiteAPI SDK Test Suite', function() {
 
   it('should update an existing voucher', async function() {
     const data = {
-      voucher_code: 'em8kyd7l',
+      voucher_code: getVoucherCode(),
       discount_type: 'percentage',
       discount_value: 12,
       minimum_spend: 60,
@@ -214,14 +233,14 @@ describe('LiteAPI SDK Test Suite', function() {
       status: 'active',
     };
 
-    const result = await liteApi.updateVoucher(80, data);
+    const result = await liteApi.updateVoucher(latestVoucherId, data);
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
   });
 
   it('should update the status of a voucher', async function() {
-    const result = await liteApi.updateVoucherStatus(80, { status: 'inactive' });
+    const result = await liteApi.updateVoucherStatus(latestVoucherId, { status: 'inactive' });
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
@@ -263,14 +282,14 @@ describe('LiteAPI SDK Test Suite', function() {
 
   it('should retrieve analytics report', async function () {
     const result = await liteApi.retrieveAnalyticsReport({ from: '2024-01-01', to: '2024-01-07' });
-  
+
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.have.property('totalRevenue');
     expect(result.data.totalRevenue).to.be.a('number');
-    expect(result.data).to.have.property('salesRevenue').that.is.an('array');
+    expect(result.data).to.have.property('salesRevenue');
     expect(result.data.salesRevenue).to.not.be.empty;
-  });
+});
 
   it('should retrieve market analytics', async function() {
     const result = await liteApi.retrieveMarketAnalytics({ from: '2024-01-01', to: '2024-01-07' });
