@@ -464,48 +464,56 @@ class LiteApi {
             "data": data.data
         }
     }
-    /**
-    * Retrieves a list of reviews for a specific hotel identified by hotelId
-    * @param {string} hotelId - Unique ID of a hotel
-    * @param {number} limit - limit number of reviews (max 1000)
-    * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
-    * @returns {array} - The reviews of the hotel
-    */
-    async getHotelReviews(hotelId, limit, getSentiment) {
-        let errors = [];
-        if (hotelId == "" || hotelId === undefined) {
-            errors.push("The Hotel code is required");
-        }
+   /**
+ * Retrieves a list of reviews for a specific hotel identified by hotelId
+ * @param {string} hotelId - Unique ID of a hotel
+ * @param {number} limit - limit number of reviews (max 1000)
+ * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
+ * @returns {object} - The reviews and sentiment analysis of the hotel
+ */
+async getHotelReviews(hotelId, limit, getSentiment) {
+    let errors = [];
+    if (!hotelId) {
+        errors.push("The Hotel code is required");
+    }
 
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                'X-API-Key': this.apiKey
-            },
+    if (errors.length > 0) {
+        return {
+            "status": "failed",
+            "errors": errors
         };
+    }
 
-        const response = await fetch(`${this.serviceURL}/data/reviews?hotelId=${hotelId}&limit=${limit}&timeout=5&getSentiment=${getSentiment}`, options);
-        const data = await response.json();
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            'X-API-Key': this.apiKey
+        },
+    };
+    try {
+        const response = await fetch(`${this.serviceURL}/data/reviews?hotelId=${hotelId}&limit=${limit}&getSentiment=${getSentiment}`, options);
+        const result = await response.json();
 
         if (!response.ok) {
             return {
                 "status": "failed",
-                "error": data.error
-            }
+                "error": result.error || "Failed to fetch reviews"
+            };
         }
         return {
             "status": "success",
-            "data": data.data
-        }
+            "data": result.data || [], 
+            "sentimentAnalysis": result.sentimentAnalysis || { } 
+        };
+    } catch (error) {
+        return {
+            "status": "failed",
+            "error": error.message || "Unknown error occurred"
+        };
     }
+}
     /**
     * The API returns the list of countries available along with its ISO-2 code.
     * @returns {array} - The result of the operation.

@@ -147,7 +147,9 @@ describe('LiteAPI SDK Test Suite', function() {
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('array');
-  });
+    expect(result).to.have.property('sentimentAnalysis');
+    expect(result.sentimentAnalysis).to.be.an('object');
+});
 
   it('should retrieve available countries', async function() {
     const result = await liteApi.getCountries();
