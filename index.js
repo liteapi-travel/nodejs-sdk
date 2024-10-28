@@ -471,7 +471,7 @@ class LiteApi {
  * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
  * @returns {object} - The reviews and sentiment analysis of the hotel
  */
-async getHotelReviews(hotelId, limit, getSentiment) {
+async getDataReviews(hotelId, limit, getSentiment) {
     let errors = [];
     if (!hotelId) {
         errors.push("The Hotel code is required");
