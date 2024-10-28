@@ -464,17 +464,26 @@ class LiteApi {
             "data": data.data
         }
     }
+
     /**
-     * Retrieves a list of reviews for a specific hotel identified by hotelId.
-     * @deprecated This method is deprecated and will be removed in future versions. Use `getDataReviews` instead.
-     * @param {string} hotelId - Unique ID of a hotel
-     * @param {number} limit - Limit number of reviews (max 1000)
-     * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
-     * @returns {object} - The reviews and sentiment analysis of the hotel
-     */
+    * Retrieves a list of reviews for a specific hotel identified by hotelId.
+    * @deprecated This method is deprecated and will be removed in future versions. Use `getDataReviews` instead.
+    * @param {string} hotelId - Unique ID of a hotel
+    * @param {number} limit - Limit number of reviews (max 1000)
+    * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
+    * @returns {object} - The reviews and sentiment analysis of the hotel
+    */
     async getHotelReviews(hotelId, limit, getSentiment) {
         return await this.getDataReviews(hotelId, limit, getSentiment);
     }
+
+    /**
+    * Retrieves a list of reviews for a specific hotel identified by hotelId
+    * @param {string} hotelId - Unique ID of a hotel
+    * @param {number} limit - limit number of reviews (max 1000)
+    * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
+    * @returns {object} - The reviews and sentiment analysis of the hotel
+    */
     async getDataReviews(hotelId, limit, getSentiment) {
         let errors = [];
         if (!hotelId) {
