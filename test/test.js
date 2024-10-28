@@ -143,7 +143,7 @@ describe('LiteAPI SDK Test Suite', function() {
   });
 
   it('should retrieve hotel reviews by ID', async function() {
-    const result = await liteApi.getHotelReviews('lp1897', 5, true);
+    const result = await liteApi.getDataReviews('lp1897', 5, true);
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('array');

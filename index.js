@@ -464,56 +464,69 @@ class LiteApi {
             "data": data.data
         }
     }
-   /**
- * Retrieves a list of reviews for a specific hotel identified by hotelId
- * @param {string} hotelId - Unique ID of a hotel
- * @param {number} limit - limit number of reviews (max 1000)
- * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
- * @returns {object} - The reviews and sentiment analysis of the hotel
- */
-async getHotelReviews(hotelId, limit, getSentiment) {
-    let errors = [];
-    if (!hotelId) {
-        errors.push("The Hotel code is required");
+
+    /**
+    * Retrieves a list of reviews for a specific hotel identified by hotelId.
+    * @deprecated This method is deprecated and will be removed in future versions. Use `getDataReviews` instead.
+    * @param {string} hotelId - Unique ID of a hotel
+    * @param {number} limit - Limit number of reviews (max 1000)
+    * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
+    * @returns {object} - The reviews and sentiment analysis of the hotel
+    */
+    async getHotelReviews(hotelId, limit, getSentiment) {
+        return await this.getDataReviews(hotelId, limit, getSentiment);
     }
 
-    if (errors.length > 0) {
-        return {
-            "status": "failed",
-            "errors": errors
-        };
-    }
+    /**
+    * Retrieves a list of reviews for a specific hotel identified by hotelId
+    * @param {string} hotelId - Unique ID of a hotel
+    * @param {number} limit - limit number of reviews (max 1000)
+    * @param {boolean} getSentiment - If set to true, the sentiment analysis of the review text will be returned
+    * @returns {object} - The reviews and sentiment analysis of the hotel
+    */
+    async getDataReviews(hotelId, limit, getSentiment) {
+        let errors = [];
+        if (!hotelId) {
+            errors.push("The Hotel code is required");
+        }
 
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            'content-type': 'application/json',
-            'X-API-Key': this.apiKey
-        },
-    };
-    try {
-        const response = await fetch(`${this.serviceURL}/data/reviews?hotelId=${hotelId}&limit=${limit}&getSentiment=${getSentiment}`, options);
-        const result = await response.json();
-
-        if (!response.ok) {
+        if (errors.length > 0) {
             return {
                 "status": "failed",
-                "error": result.error || "Failed to fetch reviews"
+                "errors": errors
             };
         }
-        return {
-            "status": "success",
-            "data": result.data || [], 
-            "sentimentAnalysis": result.sentimentAnalysis || { } 
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
         };
-    } catch (error) {
-        return {
-            "status": "failed",
-            "error": error.message || "Unknown error occurred"
-        };
+        try {
+            const response = await fetch(`${this.serviceURL}/data/reviews?hotelId=${hotelId}&limit=${limit}&getSentiment=${getSentiment}`, options);
+            const result = await response.json();
+
+            if (!response.ok) {
+                return {
+                    "status": "failed",
+                    "error": result.error || "Failed to fetch reviews"
+                };
+            }
+            return {
+                "status": "success",
+                "data": result.data || [], 
+                "sentimentAnalysis": result.sentimentAnalysis || { } 
+            };
+        } catch (error) {
+            return {
+                "status": "failed",
+                "error": error.message || "Unknown error occurred"
+            };
+        }
     }
-}
     /**
     * The API returns the list of countries available along with its ISO-2 code.
     * @returns {array} - The result of the operation.
