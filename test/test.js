@@ -43,8 +43,6 @@ describe('LiteAPI SDK Test Suite', function() {
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
-
-    // Extract and log the prebook ID if present
         prebook = result.data.prebookId;
     } 
 );

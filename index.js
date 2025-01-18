@@ -142,9 +142,6 @@ async getFullRates(data, timeoutMs = 10000) {
           error: result?.error || `Request failed with status ${response.status}`
         };
       }
-  
- 
-  
       // 7. Return success
       return {
         status: 'success',
