@@ -18,8 +18,8 @@ describe('LiteAPI SDK Test Suite', function() {
       occupancies: [{ adults: 2, children: [5] }],
       currency: 'USD',
       guestNationality: 'US',
-      checkin: '2024-12-30',
-      checkout: '2024-12-31',
+      checkin: '2025-12-30',
+      checkout: '2025-12-31',
       countryCode: 'USD',
     };
 
@@ -34,14 +34,20 @@ describe('LiteAPI SDK Test Suite', function() {
 
   it('should prebook an offer', async function() {
     const data = {
-      offerId: offer,
+        offerId: offer, 
     };
 
     const result = await liteApi.preBook(data);
+
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
-  });
+
+    // Extract and log the prebook ID if present
+        prebook = result.data.prebookId;
+    } 
+);
+
 
   it('should book a hotel room', async function() {
     const data = {
@@ -53,7 +59,7 @@ describe('LiteAPI SDK Test Suite', function() {
       payment: {
         method: 'ACC_CREDIT_CARD',
       },
-      prebookId: '6-xUGK8_C', 
+      prebookId: prebook, 
       guests: [
         {
           occupancyNumber: 1,

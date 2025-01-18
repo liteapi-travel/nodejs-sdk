@@ -5,125 +5,426 @@ class LiteApi {
         this.bookServiceURL = "https://book.liteapi.travel/v3.0";
         this.dashboardURL = 'https://da.liteapi.travel';
     }
-    /**
-     * The Full Rates API is to search and return all available rooms along with its rates, cancellation policies for a list of hotel ID's based on the search dates.
-    For each hotel ID, all available room information is returned.
-    The API also has a built in loyalty rewards system. The system rewards return users who have made prior bookings.
-    If the search is coming from a known guest ID, the guest level is also returned along with the pricing that's appropriate for the guest level.
-    If it is a new user, the guest ID will be generated at the time of the first confirmed booking.
-     * @param {object} data - The search criteria object.
-     * @returns {object} - The result of the operation.
-     */
-    async getFullRates(data) {
-        const options = {
-            method: 'POST',
-            headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                'X-API-Key': this.apiKey
-            },
-            body: JSON.stringify(data)
-        };
-        const response = await fetch(this.serviceURL + '/hotels/rates', options);
-        const result = await response.json();
-
-        if (!response.ok) {
-            return {
-                "status": "failed",
-                "error": result.error
+ /**
+ * The Full Rates API is to search and return all available rooms along with their rates 
+ * and cancellation policies for a list of hotel IDs based on the search dates.
+ *
+ * For each hotel ID, all available room information is returned.
+ * The API also has a built-in loyalty rewards system which rewards returning users
+ * who have made prior bookings. If the search is coming from a known guest ID,
+ * the guest level is also returned along with the pricing appropriate for that guest level.
+ * If it is a new user, the guest ID will be generated at the time of the first confirmed booking.
+ *
+ * @param {object} data - The search criteria object.
+ * @param {string[]} data.hotelIds - List of hotel IDs to retrieve rates for (required).
+ * @param {Object[]} data.occupancies - Array of occupancy objects; each occupancy object should include:
+ *    - {number} adults - Number of adults
+ *    - {number[]} [children] - Array of child ages (optional)
+ * @param {string} data.currency - The currency code, e.g. 'USD' (required).
+ * @param {string} data.guestNationality - Nationality code, e.g. 'US' (required).
+ * @param {string} data.checkin - Check-in date in YYYY-MM-DD format (required).
+ * @param {string} data.checkout - Check-out date in YYYY-MM-DD format (required).
+ * @param {string} [data.countryCode] - Optional country code, e.g. 'US'.
+ *
+ * @param {number} [timeoutMs=10000] - Timeout in milliseconds (default: 10 seconds).
+ *
+ * @returns {object} - The result of the operation.
+ *   - On success: { "status": "success", "data": <FullRatesResponse> }
+ *   - On failure: { "status": "failed", "error": "..." } or { "status": "failed", "errors": [ ... ] }
+ */
+async getFullRates(data, timeoutMs = 10000) {
+    // 1. Validate input
+    const errors = [];
+  
+    // Ensure `data` is an object
+    if (!data || typeof data !== 'object') {
+      errors.push('The `data` parameter is required and must be an object.');
+    } else {
+      // 1a. hotelIds
+      if (!Array.isArray(data.hotelIds) || data.hotelIds.length === 0) {
+        errors.push('`hotelIds` is required and must be a non-empty array of strings.');
+      }
+  
+      // 1b. checkin & checkout
+      if (!data.checkin || typeof data.checkin !== 'string') {
+        errors.push('`checkin` is required and must be a string in YYYY-MM-DD format.');
+      }
+      if (!data.checkout || typeof data.checkout !== 'string') {
+        errors.push('`checkout` is required and must be a string in YYYY-MM-DD format.');
+      }
+  
+      // 1c. currency
+      if (!data.currency || typeof data.currency !== 'string') {
+        errors.push('`currency` is required and must be a string (e.g., "USD").');
+      }
+  
+      // 1d. guestNationality
+      if (!data.guestNationality || typeof data.guestNationality !== 'string') {
+        errors.push('`guestNationality` is required and must be a string (e.g., "US").');
+      }
+  
+      // 1e. occupancies
+      if (!Array.isArray(data.occupancies) || data.occupancies.length === 0) {
+        errors.push('`occupancies` is required and must be a non-empty array.');
+      } else {
+        // Validate each occupancy object
+        data.occupancies.forEach((occupancy, index) => {
+          if (typeof occupancy !== 'object') {
+            errors.push(`occupancies[${index}] must be an object.`);
+          } else {
+            if (typeof occupancy.adults !== 'number') {
+              errors.push(`occupancies[${index}] must have a numeric 'adults' property.`);
             }
-        }
-
-        return {
-            "status": "success",
-            "data": result
-        }
+            // If children are used, ensure it is an array of numbers
+            if (occupancy.children && !Array.isArray(occupancy.children)) {
+              errors.push(`occupancies[${index}].children must be an array of numbers if provided.`);
+            }
+          }
+        });
+      }
     }
-    /**
-     * This API is used to confirm if the room and rates for the search criterion. The input to the endpoint is an array of rate Ids coming from the GET hotel full rates availability API.
-     * In response, the API generates a prebook Id, a new rate Id and contains information if price, cancellation policy or boarding information has changed.
-     * @param {array} data - The input parameters for the API
-     * @returns {object} - The result of the operation.
-     */
-    async preBook(data) {
-        let errors = [];
-        if (typeof data !== 'object' || typeof data.offerId !== 'string' || !data.offerId) {
-            errors.push("The offerId is required");
-        }
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
-        const options = {
-            method: 'POST',
-            headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                'X-API-Key': this.apiKey
-            },
-            body: JSON.stringify(data)
-        };
-        const response = await fetch(this.bookServiceURL + '/rates/prebook', options);
-        const result = await response.json();
-        if (!response.ok) {
-            return {
-                "status": "failed",
-                "error": result.error
-            }
-        }
-
-        return {
-            "status": "success",
-            "data": result.data
-        }
+  
+    // If any validation errors occurred, return them
+    if (errors.length > 0) {
+      return {
+        status: 'failed',
+        errors
+      };
     }
-    /**
-     * This API confirms a booking when the prebook Id and the rate Id from the pre book stage along with the guest and payment information are passed.
-
-    The guest information is an object that should include the guest first name, last name and email.
-
-    The payment information is an object that should include the name, credit card number, expiry and CVC number.
-
-    The response will confirm the booking along with a booking Id and a hotel confirmation code. It will also include the booking details including the dates, price and the cancellation policies.
-     *
-     * @param {object} data - the API request parameters
-     */
-    async book(data) {
-        let errors = [];
-        if (typeof data !== 'object' || typeof data.prebookId !== 'string' || !data.prebookId) {
-            errors.push("The offerId is required");
-        }
-        if (errors.length > 0) {
-            return {
-                "status": "failed",
-                "errors": errors
-            }
-        }
-        const options = {
-            method: 'POST',
-            headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                'X-API-Key': this.apiKey
-            },
-            body: JSON.stringify(data)
-        };
-        const response = await fetch(this.bookServiceURL + '/rates/book', options)
-        const result = await response.json();
-        if (!response.ok) {
-            return {
-                "status": "failed",
-                "error": result.error
-            }
-        }
-
+  
+    // 2. Prepare request options
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        'X-API-Key': this.apiKey
+      },
+      body: JSON.stringify(data)
+    };
+  
+    // 3. Setup AbortController for timeout
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let timeoutId;
+  
+    try {
+      // Begin timeout countdown
+      timeoutId = setTimeout(() => {
+        controller.abort();
+      }, timeoutMs);
+  
+      // 4. Execute the fetch request
+      const response = await fetch(`${this.serviceURL}/hotels/rates`, {
+        ...options,
+        signal
+      });
+  
+      // Clear the timeout once we get a response
+      clearTimeout(timeoutId);
+  
+      // 5. Attempt to parse JSON
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseError) {
         return {
-            "status": "success",
-            "data": result.data
-        }
+          status: 'failed',
+          error: `Invalid JSON response from server: ${parseError.message}`
+        };
+      }
+  
+      // 6. Check HTTP status
+      if (!response.ok) {
+        return {
+          status: 'failed',
+          // Return server-provided error if available, otherwise fallback
+          error: result?.error || `Request failed with status ${response.status}`
+        };
+      }
+  
+ 
+  
+      // 7. Return success
+      return {
+        status: 'success',
+        data: result
+      };
+    } catch (error) {
+      // Clear the timeout if an error occurs
+      clearTimeout(timeoutId);
+  
+      // 8. Handle abort (timeout) error
+      if (error.name === 'AbortError') {
+        return {
+          status: 'failed',
+          error: `Request aborted due to timeout of ${timeoutMs}ms.`
+        };
+      }
+  
+      // 9. Handle generic network or runtime errors
+      return {
+        status: 'failed',
+        error: `Unexpected error: ${error.message}`
+      };
     }
+  }
+  
+  
+   /**
+ * This API is used to confirm if the room and rates are valid for the specified search criteria.
+ * The input parameter must include a valid offerId and a boolean usePaymentSdk.
+ *
+ * The API generates a prebookId and a new rateId, and also indicates if price,
+ * cancellation policy, or boarding information has changed.
+ *
+ * @param {object} data - The input parameters for the API.
+ * @param {string} data.offerId - The rate offer ID from the full rates API (required).
+ * @param {boolean} data.usePaymentSdk - Indicates whether to use payment SDK (required).
+ *
+ * @param {number} [timeoutMs=10000] - Timeout in milliseconds (default: 10 seconds).
+ *
+ * @returns {object} - The result of the operation:
+ *   - On success: { "status": "success", "data": <PrebookResponse> }
+ *   - On failure: { "status": "failed", "error": "..." } or { "status": "failed", "errors": [ ... ] }
+ */
+async preBook(data, timeoutMs = 10000) {
+    const errors = [];
+  
+    if (!data || typeof data !== 'object') {
+      errors.push('`data` must be a valid object.');
+    } else {
+      if (!data.offerId || typeof data.offerId !== 'string' || !data.offerId.trim()) {
+        errors.push('`offerId` is required and must be a non-empty string.');
+      }
+      if (typeof data.usePaymentSdk !== 'boolean') {
+        errors.push('`usePaymentSdk` is required and must be a boolean.');
+      }
+    }
+  
+    if (errors.length > 0) {
+      return {
+        status: 'failed',
+        errors
+      };
+    }
+  
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        'X-API-Key': this.apiKey
+      },
+      body: JSON.stringify(data)
+    };
+  
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let timeoutId;
+  
+    try {
+      timeoutId = setTimeout(() => {
+        controller.abort();
+      }, timeoutMs);
+  
+      const response = await fetch(`${this.bookServiceURL}/rates/prebook`, {
+        ...options,
+        signal
+      });
+  
+      clearTimeout(timeoutId);
+  
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        return {
+          status: 'failed',
+          error: `Invalid JSON response from server: ${parseError.message}`
+        };
+      }
+  
+      if (!response.ok) {
+        return {
+          status: 'failed',
+          error: result?.error || `Request failed with status ${response.status}`
+        };
+      }
+  
+      return {
+        status: 'success',
+        data: result.data
+      };
+    } catch (error) {
+      clearTimeout(timeoutId);
+  
+      if (error.name === 'AbortError') {
+        return {
+          status: 'failed',
+          error: `Request aborted due to timeout of ${timeoutMs}ms.`
+        };
+      }
+  
+      return {
+        status: 'failed',
+        error: `Unexpected error: ${error.message}`
+      };
+    }
+  }
+  
+/**
+ * Books a hotel room given a valid prebookId, holder information, payment details,
+ * a required guests array, and an optional clientReference.
+ *
+ * @param {object} data - The booking data.
+ * @param {string} data.prebookId - The prebook ID obtained from the pre-book step (required).
+ * @param {object} data.holder - Object containing booking holder's details (required).
+ * @param {object} data.payment - Payment object containing a `method` (required).
+ * @param {string} data.payment.method - The payment method, e.g. 'ACC_CREDIT_CARD'.
+ * @param {object[]} data.guests - Required array of guest objects.
+ * @param {string} [data.clientReference] - Optional reference for the booking.
+ *
+ * @param {number} [timeoutMs=10000] - Timeout in milliseconds (default: 10 seconds).
+ *
+ * @returns {object} - The result of the operation:
+ *   - On success: { "status": "success", "data": <BookingResponse> }
+ *   - On failure: { "status": "failed", "error": "..." } or { "status": "failed", "errors": [ ... ] }
+ */
+async book(data, timeoutMs = 10000) {
+    const errors = [];
+  
+    // Basic data check
+    if (!data || typeof data !== 'object') {
+      errors.push('`data` must be a valid object.');
+    } else {
+      // prebookId
+      if (!data.prebookId || typeof data.prebookId !== 'string' || !data.prebookId.trim()) {
+        errors.push('`prebookId` is required and must be a non-empty string.');
+      }
+  
+      // holder
+      if (!data.holder || typeof data.holder !== 'object') {
+        errors.push('`holder` is required and must be an object.');
+      } else {
+        if (!data.holder.firstName) {
+          errors.push('`holder.firstName` is required.');
+        }
+        if (!data.holder.lastName) {
+          errors.push('`holder.lastName` is required.');
+        }
+        if (!data.holder.email) {
+          errors.push('`holder.email` is required.');
+        }
+      }
+  
+      // payment.method
+      if (!data.payment || typeof data.payment !== 'object') {
+        errors.push('`payment` is required and must be an object.');
+      } else if (!data.payment.method || typeof data.payment.method !== 'string') {
+        errors.push('`payment.method` is required and must be a string.');
+      }
+  
+      // guests array
+      if (!Array.isArray(data.guests) || data.guests.length === 0) {
+        errors.push('`guests` is required and must be a non-empty array.');
+      } else {
+        data.guests.forEach((guest, idx) => {
+          if (typeof guest !== 'object') {
+            errors.push(`guests[${idx}] must be an object.`);
+            return;
+          }
+          if (!guest.firstName) {
+            errors.push(`guests[${idx}].firstName is required.`);
+          }
+          if (!guest.lastName) {
+            errors.push(`guests[${idx}].lastName is required.`);
+          }
+          if (!guest.email) {
+            errors.push(`guests[${idx}].email is required.`);
+          }
+        });
+      }
+  
+      // clientReference (optional)
+      if (data.clientReference && typeof data.clientReference !== 'string') {
+        errors.push('`clientReference` must be a string if provided.');
+      }
+    }
+  
+    if (errors.length > 0) {
+      return {
+        status: 'failed',
+        errors
+      };
+    }
+  
+    const options = {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        'X-API-Key': this.apiKey
+      },
+      body: JSON.stringify(data)
+    };
+  
+    const controller = new AbortController();
+    const signal = controller.signal;
+    let timeoutId;
+  
+    try {
+      timeoutId = setTimeout(() => {
+        controller.abort();
+      }, timeoutMs);
+  
+      const response = await fetch(`${this.bookServiceURL}/rates/book`, {
+        ...options,
+        signal
+      });
+  
+      clearTimeout(timeoutId);
+  
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        return {
+          status: 'failed',
+          error: `Invalid JSON response from server: ${parseError.message}`
+        };
+      }
+  
+      if (!response.ok) {
+        return {
+          status: 'failed',
+          error: result?.error || `Request failed with status ${response.status}`
+        };
+      }
+  
+      return {
+        status: 'success',
+        data: result.data
+      };
+    } catch (error) {
+      clearTimeout(timeoutId);
+  
+      if (error.name === 'AbortError') {
+        return {
+          status: 'failed',
+          error: `Request aborted due to timeout of ${timeoutMs}ms.`
+        };
+      }
+  
+      return {
+        status: 'failed',
+        error: `Unexpected error: ${error.message}`
+      };
+    }
+  }
+  
+  
+
     /**
      * The API returns the list of booking Id's for a given guest Id.
      * @param {string} clientReference - required guestId or clientReference
