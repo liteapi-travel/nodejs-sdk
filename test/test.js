@@ -35,6 +35,7 @@ describe('LiteAPI SDK Test Suite', function() {
   it('should prebook an offer', async function() {
     const data = {
         offerId: offer, 
+        usePaymentSdk: true,
     };
 
     const result = await liteApi.preBook(data);
