@@ -435,9 +435,10 @@ class LiteApi {
     /**
     * The hotel details API returns all the static contents details of a hotel or property if the hotel ID is provided. The static content include name, description, address, amenities, cancellation policies, images and more.
     * @param {string} hotelId - Unique ID of a hotel
+    * @param {string} language - Language code for the response (optional)
     * @returns {array} - The result of the operation.
     */
-    async getHotelDetails(hotelId) {
+    async getHotelDetails(hotelId, language) {
         let errors = [];
         if (hotelId == "" || hotelId === undefined) {
             errors.push("The Hotel code is required");
@@ -451,7 +452,7 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const response = await fetch(this.serviceURL + '/data/hotel?hotelId=' + hotelId, options)
+        const response = await fetch(this.serviceURL + '/data/hotel?hotelId=' + hotelId + (language ? '&language=' + encodeURIComponent(language) : ''), options)
         const data = await response.json();
         if (!response.ok) {
             return {
