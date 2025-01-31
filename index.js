@@ -405,9 +405,10 @@ class LiteApi {
     * The minimum required information is the country code in ISO-2 format. The API supports additional search criteria such as city name, geo coordinates, and radius.
     * This endpoint provides detailed hotel metadata, including names, addresses, ratings, amenities, and images, facilitating robust hotel search and display features within applications.
     * @param {string} parameters - The search criteria parameters.
+    * @param {string} language - Language code for the response (optional)
     * @returns {array} - The result of the operation.
     */
-    async getHotels(parameters) {
+    async getHotels(parameters, language) {
         const options = {
             method: 'GET',
             headers: {
@@ -418,7 +419,8 @@ class LiteApi {
         };
 
         const query = decodeURIComponent(new URLSearchParams(parameters || {}).toString());
-        const response = await fetch(this.serviceURL + '/data/hotels?' + query, options)
+        const languageQuery = language ? '&language=' + encodeURIComponent(language) : '';
+        const response = await fetch(this.serviceURL + '/data/hotels?' + query + languageQuery, options)
         const data = await response.json();
 
         if (!response.ok) {
@@ -435,9 +437,10 @@ class LiteApi {
     /**
     * The hotel details API returns all the static contents details of a hotel or property if the hotel ID is provided. The static content include name, description, address, amenities, cancellation policies, images and more.
     * @param {string} hotelId - Unique ID of a hotel
+    * @param {string} language - Language code for the response (optional)
     * @returns {array} - The result of the operation.
     */
-    async getHotelDetails(hotelId) {
+    async getHotelDetails(hotelId, language) {
         let errors = [];
         if (hotelId == "" || hotelId === undefined) {
             errors.push("The Hotel code is required");
@@ -451,7 +454,7 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const response = await fetch(this.serviceURL + '/data/hotel?hotelId=' + hotelId, options)
+        const response = await fetch(this.serviceURL + '/data/hotel?hotelId=' + hotelId + (language ? '&language=' + encodeURIComponent(language) : ''), options)
         const data = await response.json();
         if (!response.ok) {
             return {

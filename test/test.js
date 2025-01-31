@@ -129,14 +129,14 @@ describe('LiteAPI SDK Test Suite', function() {
   });
 
   it('should retrieve hotels by country and city', async function() {
-    const result = await liteApi.getHotels({ countryCode: 'IT', cityName: 'Rome' });
+    const result = await liteApi.getHotels({ countryCode: 'IT', cityName: 'Rome', language: 'fr' });
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('array');
   });
 
   it('should retrieve hotel details by ID', async function() {
-    const result = await liteApi.getHotelDetails('lp1897');
+    const result = await liteApi.getHotelDetails('lp1897', 'fr');
     expect(result).to.have.property('status', 'success');
     expect(result).to.have.property('data');
     expect(result.data).to.be.an('object');
