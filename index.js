@@ -39,6 +39,33 @@ class LiteApi {
             "data": result
         }
     }
+
+    async getMinRates(data) {
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                'X-API-Key': this.apiKey
+            },
+            body: JSON.stringify(data)
+        };
+        const response = await fetch(this.serviceURL + '/hotels/min-rates', options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            return {
+                "status": "failed",
+                "error": result.error
+            }
+        }
+
+        return {
+            "status": "success",
+            "data": result
+        }
+    }
+    
     /**
      * This API is used to confirm if the room and rates for the search criterion. The input to the endpoint is an array of rate Ids coming from the GET hotel full rates availability API.
      * In response, the API generates a prebook Id, a new rate Id and contains information if price, cancellation policy or boarding information has changed.
