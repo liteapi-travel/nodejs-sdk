@@ -345,7 +345,7 @@ class LiteApi {
             "data": data.data
         }
     }
-     /**
+    /**
     * The API returns the list of hotel facilities available in the system.
     * @returns {array} - The result of the operation.
     */
@@ -372,7 +372,7 @@ class LiteApi {
             "data": data.data
         }
     }
-     /**
+    /**
     * The API returns a list of available hotel types.
     * @returns {array} - The result of the operation.
     */
@@ -399,7 +399,7 @@ class LiteApi {
             "data": data.data
         }
     }
-     /**
+    /**
     * The API returns a list of available hotel chains.
     * @returns {array} - The result of the operation.
     */
@@ -426,7 +426,7 @@ class LiteApi {
             "data": data.data
         }
     }
-     /**
+   /**
    * This API endpoint returns a list of hotels available based on different search criterion.
    * The minimum required information is the country code in ISO-2 format. The API supports additional search criteria such as city name, geo coordinates, and radius.
    * This endpoint provides detailed hotel metadata, including names, addresses, ratings, amenities, and images, facilitating robust hotel search and display features within applications.
