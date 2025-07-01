@@ -141,7 +141,6 @@ describe("LiteAPI SDK Test Suite", function () {
     const language = "en";
 
     const result = await liteApi.getPlaces(textQuery, type, language);
-    // console.log("getPlaces endpoint response:", result);
 
     expect(result).to.have.property("status", "success");
     expect(result).to.have.property("data");
@@ -150,11 +149,10 @@ describe("LiteAPI SDK Test Suite", function () {
 
   it("should retrieve hotels by country and city", async function () {
     const result = await liteApi.getHotels({
-      countryCode: "mz",
-      cityName: "Maputo",
-      language: "fr",
+      countryCode: "IT",
+      cityName: "Rome",
+      language: "en",
     });
-    console.log("gethotels", result);
     expect(result).to.have.property("status", "success");
     expect(result).to.have.property("data");
     expect(result.data).to.be.an("array");
