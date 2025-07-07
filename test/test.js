@@ -136,7 +136,7 @@ describe("LiteAPI SDK Test Suite", function () {
   });
 
   it("should retrieve places based on text query", async function () {
-    const textQuery = "Maputo";
+    const textQuery = "Rome";
     const type = "";
     const language = "en";
 
