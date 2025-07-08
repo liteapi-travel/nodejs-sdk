@@ -345,7 +345,7 @@ class LiteApi {
             "data": data.data
         }
     }
-     /**
+    /**
     * The API returns the list of hotel facilities available in the system.
     * @returns {array} - The result of the operation.
     */
@@ -372,7 +372,7 @@ class LiteApi {
             "data": data.data
         }
     }
-     /**
+    /**
     * The API returns a list of available hotel types.
     * @returns {array} - The result of the operation.
     */
@@ -399,7 +399,7 @@ class LiteApi {
             "data": data.data
         }
     }
-     /**
+    /**
     * The API returns a list of available hotel chains.
     * @returns {array} - The result of the operation.
     */
@@ -426,40 +426,71 @@ class LiteApi {
             "data": data.data
         }
     }
-    /**
-    * This API endpoint returns a list of hotels available based on different search criterion.
-    * The minimum required information is the country code in ISO-2 format. The API supports additional search criteria such as city name, geo coordinates, and radius.
-    * This endpoint provides detailed hotel metadata, including names, addresses, ratings, amenities, and images, facilitating robust hotel search and display features within applications.
-    * @param {string} parameters - The search criteria parameters.
-    * @param {string} language - Language code for the response (optional)
-    * @returns {array} - The result of the operation.
-    */
-    async getHotels(parameters, language) {
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                'X-API-Key': this.apiKey
-            },
-        };
+   /**
+   * This API endpoint returns a list of hotels available based on different search criterion.
+   * The minimum required information is the country code in ISO-2 format. The API supports additional search criteria such as city name, geo coordinates, and radius.
+   * This endpoint provides detailed hotel metadata, including names, addresses, ratings, amenities, and images, facilitating robust hotel search and display features within applications.
+   * @param {string} parameters - The search criteria parameters.
+   * @param {string} language - Language code for the response (optional)
+   * @returns {array} - The result of the operation.
+   */
+  async getHotels(parameters, language, retries = 3, delay = 1000) {
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        "X-API-Key": this.apiKey,
+      },
+    };
 
-        const query = decodeURIComponent(new URLSearchParams(parameters || {}).toString());
-        const languageQuery = language ? '&language=' + encodeURIComponent(language) : '';
-        const response = await fetch(this.serviceURL + '/data/hotels?' + query + languageQuery, options)
-        const data = await response.json();
+    const query = new URLSearchParams(parameters || {}).toString();
+    const languageQuery = language
+      ? "&language=" + encodeURIComponent(language)
+      : "";
 
-        if (!response.ok) {
-            return {
-                "status": "failed",
-                "error": data.error
-            }
+    try {
+      const response = await fetch(
+        this.serviceURL + "/data/hotels?" + query + languageQuery,
+        options
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Check specifically for rate limit errors
+        if (
+          response.status === 429 ||
+          (data.error && data.error.code === 4290)
+        ) {
+          if (retries > 0) {
+            console.log(
+              `Rate limit hit. Retrying after ${delay}ms. Retries left: ${retries}`
+            );
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            // Exponential backoff - double the delay for next retry
+            return this.getHotels(parameters, language, retries - 1, delay * 2);
+          }
         }
+
         return {
-            "status": "success",
-            "data": data.data
-        }
+          status: "failed",
+          error: data.error,
+        };
+      }
+
+      return {
+        status: "success",
+        data: data.data,
+      };
+    } catch (error) {
+      return {
+        status: "failed",
+        error: {
+          message: error.message || "Unknown error occurred",
+        },
+      };
     }
+  }
     /**
     * The hotel details API returns all the static contents details of a hotel or property if the hotel ID is provided. The static content include name, description, address, amenities, cancellation policies, images and more.
     * @param {string} hotelId - Unique ID of a hotel
