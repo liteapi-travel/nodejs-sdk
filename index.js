@@ -511,17 +511,23 @@ class LiteApi {
                 'X-API-Key': this.apiKey
             },
         };
-        const response = await fetch(this.serviceURL + '/data/hotel?hotelId=' + hotelId + (language ? '&language=' + encodeURIComponent(language) : ''), options)
-        const data = await response.json();
+        const response = await fetch(this.serviceURL + '/data/hotel?hotelId=' + encodeURIComponent(hotelId) + (language ? '&language=' + encodeURIComponent(language) : ''), options)
+        const result = await response.json();
         if (!response.ok) {
             return {
                 "status": "failed",
-                "error": data.error
+                "error": result.error
             }
         }
+        const hotelData = result.data || {};
+        const primaryId = (hotelData && hotelData.primaryId !== undefined) ? hotelData.primaryId : (result.primaryId !== undefined ? result.primaryId : null);
+        const deletedAt = (hotelData && hotelData.deletedAt !== undefined) ? hotelData.deletedAt : (result.deletedAt !== undefined ? result.deletedAt : null);
+        const enrichedData = { ...hotelData };
+        if (enrichedData.primaryId === undefined) enrichedData.primaryId = primaryId;
+        if (enrichedData.deletedAt === undefined) enrichedData.deletedAt = deletedAt;
         return {
             "status": "success",
-            "data": data.data
+            "data": enrichedData
         }
     }
 

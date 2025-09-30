@@ -163,6 +163,9 @@ describe("LiteAPI SDK Test Suite", function () {
     expect(result).to.have.property("status", "success");
     expect(result).to.have.property("data");
     expect(result.data).to.be.an("object");
+    // ensure SDK adds primaryId and deletedAt to the returned data
+    expect(result.data).to.have.property("primaryId");
+    expect(result.data).to.have.property("deletedAt");
   });
 
   it("should retrieve hotel reviews by ID", async function () {
